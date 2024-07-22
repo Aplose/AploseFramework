@@ -1,5 +1,6 @@
 package com.aplose.aploseframework.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Locale;
@@ -17,30 +18,34 @@ import org.thymeleaf.context.Context;
 @Service
 public class EmailService {
         @Autowired
+        ConfigService configService;
+        @Autowired
 	JavaMailSender emailSender;
         @Autowired
         private MessageSource messageSource;
         @Autowired
         private TemplateEngine templateEngine;
-        @Value("${serenitydate.fromEmail}")
         private String fromEmail;
-        @Value("${serenitydate.root.url}")
         private String rootUrl;
         
+        @PostConstruct
+        private void init(){
+            fromEmail=configService.getStringConfig("aploseframework.mail.fromEmail");
+            rootUrl=configService.getStringConfig("aploseframework.backend.root.url");
+        }
+        
 
-/*        @Async
-	public void sendRegistrationSuccessfullMessage(UserAccount userAccount) {
-            Locale locale = userAccount.getLocale();
-            String activationCode = userAccount.getActivationCode();
+        @Async
+	public void sendRegistrationSuccessfullMessage(Locale locale, String activationCode, String fromEmail, String toEmail) {
             Context ctx = new Context(locale);
             ctx.setVariable("activationCode", activationCode);   
             ctx.setVariable("logoLink", rootUrl+"/assets/img/logo.png");   
             try {
                 MimeMessage mimeMessage = emailSender.createMimeMessage();
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED, "UTF-8");
-                String subject = messageSource.getMessage("mail.registration.success.subject", null, userAccount.getLocale());
+                String subject = messageSource.getMessage("mail.registration.success.subject", null, locale);
                 String html = templateEngine.process("registration-mail.html",ctx);
-                String to = userAccount.getUsername();
+                String to = toEmail;
                 message.setFrom(fromEmail);
                 message.setTo(to);
                 message.setSubject(subject);
@@ -50,7 +55,7 @@ public class EmailService {
             } catch (MessagingException me) {
                     System.out.println(me);
             }
-	}*/
+	}
         
         /**
          * Permet l'envoi d'un mesage simple avec sujet

@@ -20,8 +20,9 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 /**
  *
@@ -33,33 +34,22 @@ public class WebConfig implements WebMvcConfigurer {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
         slr.setDefaultLocale(Locale.FRANCE);
         return slr;
     }    
-
-/*    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper;
-    }*/
-    
     @Bean
     LocaleChangeInterceptor localeChangeInterceptor(){
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         return localeChangeInterceptor;
-    }
-    
+    }    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
-    }
-    
+    }    
     @Bean
     public TemplateEngine emailTemplateEngine(SpringTemplateEngine templateEngine, MessageSource messageSource) {
         // Resolver for HTML emails (except the editable one)
@@ -68,7 +58,6 @@ public class WebConfig implements WebMvcConfigurer {
         templateEngine.setTemplateEngineMessageSource(messageSource);
         return templateEngine;
     }
-
     private ITemplateResolver htmlTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/templates/mails/");

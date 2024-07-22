@@ -4,6 +4,8 @@
  */
 package com.aplose.aploseframework.service;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,16 @@ import org.springframework.web.client.RestClient;
  */
 @Service
 public class DolibarrService {
-    @Value("${dolibarr.api.url}")
+    @Autowired
+    private ConfigService configService;
     private String dolibarrApiUrl;
-    @Value("${dolibarr.user.api.key}")
     private String dolibarrUserApiKey;
+    
+    @PostConstruct
+    private void init(){
+        dolibarrApiUrl = configService.getStringConfig("dolibarr.api.url");
+        dolibarrUserApiKey=configService.getStringConfig("dolibarr.user.api.key");
+    }
                  
     RestClient restClient = RestClient.create();
     

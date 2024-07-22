@@ -11,4 +11,6 @@ package com.aplose.aploseframework.model;
 public enum ErpTypeEnum {
     INTERNAL,//no backend, we use our internal ERP
     DOLIBARR,//we use Dolibarr ERP (i.e. DolibarrService and Dolibarr Rest Api)
+    EBP,
+    //....
 }
