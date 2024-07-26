@@ -6,6 +6,7 @@ package com.aplose.aploseframework.service;
 
 import com.aplose.aploseframework.dto.AuthRequestDTO;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuthenticationService {
-    public AuthResponseDTO login(AuthRequestDTO authRequestDTO) {
-        //TODO APPEL DOLIBARR POUR VERIFIER LE LOGIN
-        return null;
+    @Autowired
+    DolibarrService dolibarrService;
+    public String login(String userName, String password) {
+        //TODO choisir le mode d'authent
+        return dolibarrService.login(userName, password);
     }
 }

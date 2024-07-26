@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,6 +24,10 @@ import org.springframework.stereotype.Service;
 public class ConfigService {
     @Autowired
     ConfigRepository configRepository;
+    @Value("${dolibarr.api.url}")
+    String dolibarrApiUrl;
+    @Value("${dolibarr.user.api.key}")
+    String dolibarrUserApiKey;
     
     private Map<String,Config> configurations = new HashMap<>();
     
@@ -34,9 +39,10 @@ public class ConfigService {
         Optional<Config> configOptional;
         Config config=null;
         //dolibarr.api.url utilisé pour accéder à Dolibarr
+        //on utilise le dolibarr serenitydate par défaut
         configOptional = configRepository.findById("dolibarr.api.url");
         if(configOptional.isEmpty()){
-            config = new Config("dolibarr.api.url", "");
+            config = new Config("dolibarr.api.url", dolibarrApiUrl);
             configRepository.save(config);
             allKeys.remove(config.getConfigKey());
             configurations.put(config.getConfigKey(), config);
@@ -44,9 +50,10 @@ public class ConfigService {
             allKeys.remove(configOptional.get().getConfigKey());
         }
         //dolibarr.user.api.key utilisé pour accéder à Dolibarr
+        //on utilise le dolibarr serenitydate par défaut
         configOptional = configRepository.findById("dolibarr.user.api.key");
         if(configOptional.isEmpty()){
-            config = new Config("dolibarr.user.api.key", "");
+            config = new Config("dolibarr.user.api.key", dolibarrUserApiKey);
             configRepository.save(config);
             allKeys.remove(config.getConfigKey());
             configurations.put(config.getConfigKey(), config);
@@ -108,4 +115,11 @@ public class ConfigService {
         return config;
     }
     
+    public void createOrUpdate(Config config){
+        configRepository.save(config);
+        configurations.put(config.getConfigKey(), config);
+    }
+    public Config getConfig(String key){
+        return configRepository.findById(key).get();
+    }
 }

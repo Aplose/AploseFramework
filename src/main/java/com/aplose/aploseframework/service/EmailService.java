@@ -36,7 +36,7 @@ public class EmailService {
         
 
         @Async
-	public void sendRegistrationSuccessfullMessage(Locale locale, String activationCode, String fromEmail, String toEmail) {
+	public void sendRegistrationSuccessfullMessage(Locale locale, String activationCode, String toEmail) {
             Context ctx = new Context(locale);
             ctx.setVariable("activationCode", activationCode);   
             ctx.setVariable("logoLink", rootUrl+"/assets/img/logo.png");   

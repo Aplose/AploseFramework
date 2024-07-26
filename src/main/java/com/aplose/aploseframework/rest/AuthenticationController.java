@@ -27,7 +27,9 @@ public class AuthenticationController {
     
     @PostMapping("/login")
     public AuthResponseDTO login(AuthRequestDTO authRequestDTO){
-        return authenticationService.login(authRequestDTO);
+        AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+        authResponseDTO.setAccessToken(authenticationService.login(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
+        return authResponseDTO;
     }
     
 }

@@ -5,6 +5,7 @@
 package com.aplose.aploseframework.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +25,9 @@ public class Role implements GrantedAuthority{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    
     private String authority;
-    @ManyToMany
+    @ManyToMany(mappedBy = "roles")
+    private List<UserAccount> accounts;
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
     
     public Role(){}
@@ -49,6 +52,14 @@ public class Role implements GrantedAuthority{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<UserAccount> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<UserAccount> accounts) {
+        this.accounts = accounts;
     }
 
     public List<Permission> getPermissions() {
