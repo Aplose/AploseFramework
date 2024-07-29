@@ -5,6 +5,7 @@
 package com.aplose.aploseframework.repository;
 
 import com.aplose.aploseframework.model.Translation;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,4 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface TranslationRepository extends JpaRepository<Translation, Long>{
     public Translation findByCodeAndLocale(String Code, String locale);
+    public List<Translation> findByLocale(String locale);
 }

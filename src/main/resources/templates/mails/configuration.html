@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Configuration Administration</title>
+        <meta charset="UTF-8"/>
+        <!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+    </head>
+    <body>
+        <h1>Changez vos configurations ici</h1>
+        <table>
+            <tr><th>Key</th><th>String</th><th>Integer</th><th>Long</th><th>Float</th><th>Double</th><th>Instant</th><th>Boolean</th><th></th></tr>
+            <tr th:each="c : ${configurations}"><form action="th:action='@{/configuration}'" method="post"><td><input  type="text" id="configKey" name="configKey" th:field="*{configKey}"></td><td><input  type="text" id="stringValue" name="stringValue" th:field="*{stringValue}"></td><td><input  type="number" id="integerValue" name="integerValue" th:field="*{integerValue}"></td><td><input  type="number" id="longValue" name="longValue" th:field="*{longValue}"></td><td><input  type="number" id="floatValue" name="floatValue" th:field="*{floatValue}"></td><td><input  type="number" id="doubleValue" name="doubleValue" th:field="*{doubleValue}"></td><td><input  type="text" id="instantValue" name="instantValue" th:field="*{instantValue}"></td><td><input  type="text" id="booleanValue" name="booleanValue" th:field="*{booleanValue}"></td><td><input type="submit" value="Mise à jour"></td></form></tr>
+        </table>
+    </body>
+</html>

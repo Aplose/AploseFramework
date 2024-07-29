@@ -122,4 +122,7 @@ public class ConfigService {
     public Config getConfig(String key){
         return configRepository.findById(key).get();
     }
+    public List<Config> getAllConfigs(){
+        return configRepository.findAll();
+    }
 }
