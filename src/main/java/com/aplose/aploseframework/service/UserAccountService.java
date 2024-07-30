@@ -3,12 +3,15 @@ package com.aplose.aploseframework.service;
 import com.aplose.aploseframework.dto.RegisterDto;
 import com.aplose.aploseframework.dto.UserAccountDto;
 import com.aplose.aploseframework.exception.RegistrationException;
+import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.repository.UserAccountRepository;
+import jakarta.annotation.PostConstruct;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,8 @@ public class UserAccountService implements UserDetailsService{
 
     @Value("${spring.user-account.second-to-activate-account}")
     private Long secondToActivateAccount;
+    @Value("${aplose.framework.superAdmin.defaultPassword}")
+    private String superAdminDefaultPassword;
     
     @Autowired
     private EmailService emailService;
@@ -41,6 +46,24 @@ public class UserAccountService implements UserDetailsService{
     private RoleService _roleService;
     @Autowired
     private ModelMapper _modelMapper;
+    
+    @PostConstruct
+    private void init(){
+        //create first superadmin if needed
+        UserAccount superAdmin = _userAccountRepository.findByUsername("SuperAdmin");
+        if (superAdmin==null){
+            superAdmin = new UserAccount();
+            superAdmin.setCreationDate(LocalDate.now());
+            superAdmin.setEnabled(Boolean.TRUE);
+            superAdmin.setPassword(passwordEncoder.encode(superAdminDefaultPassword));
+            superAdmin.setLocked(Boolean.FALSE);
+            superAdmin.setUsername("SuperAdmin");
+            Role superAdminRole = _roleService.getByAuthority(RoleEnum.ROLE_SUPER_ADMIN.toString());
+            superAdmin.getRoles().add(superAdminRole);
+            _userAccountRepository.save(superAdmin);
+        }
+        
+    }
 
 
     @Override

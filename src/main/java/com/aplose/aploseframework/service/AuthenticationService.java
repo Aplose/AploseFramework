@@ -19,6 +19,9 @@ public class AuthenticationService {
     DolibarrService dolibarrService;
     public String login(String userName, String password) {
         //TODO choisir le mode d'authent
+        //Dans Dolibarr on ne se préoccupe pas du password
+// retieve du user dolibbar via l'api pour récupérer sa token
+// login et password sont vérifiés par SpringSecurity.
         return dolibarrService.login(userName, password);
     }
 }

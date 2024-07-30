@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,7 +25,7 @@ public class TranslationController {
     private ModelMapper modelMapper;
     
     @GetMapping
-    public String getTranslation(Locale locale, @PathVariable("code") String code, @PathVariable("defaultMessage") String defaultMessage){
+    public String getTranslation(Locale locale, @RequestParam("code") String code, @RequestParam(required = false, value = "defaultMessage") String defaultMessage){
         return translationService.getTranslationByLocaleCode(locale.toString(), code, defaultMessage);
     }
     

@@ -12,7 +12,7 @@ public class RegisterDto {
     private Long id;
 
     @Email(message = "Email is invalid")
-    private String username; // email address
+    private String username; // email address ti copy in email field
 
     @NotNull(message = "Password cannot be null")
     private String password; 
@@ -20,16 +20,19 @@ public class RegisterDto {
     @NotNull(message = "Password repeat cannot be null")
     private String passwordRepeat;
 
-    private Boolean isProfessional = Boolean.FALSE;
+    private Boolean isProfessional = Boolean.FALSE; // if TRUE -> thirdparty type = prospect/customer
+    //if false -> thirdparty type = particulier
     private Long personId;
+    
+    //ajouter un champ pour les pros : CompanyName -> thirdparty->name.
 
     @NotNull(message = "First name cannot be null")
-    private String personFirstName;
+    private String personFirstName; // contact and user firstname 
 
     @NotNull(message = "Last name cannot be null")
-    private String personLastName;
+    private String personLastName; // contact and user 
 
-    private String personPhone;
+    private String personPhone; //contact and user
 
     @NotNull(message = "You must provide your civility")
     private Long personCivilityId;
