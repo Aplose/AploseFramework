@@ -1,4 +1,7 @@
 package com.aplose.aploseframework.model.dolibarr;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author oandrade
@@ -6,6 +9,7 @@ package com.aplose.aploseframework.model.dolibarr;
 public abstract class DolibarrObject {
     Integer id;
     Integer entity;    
+    @JsonIgnore
     String endPoint;
     String ref;
     String ref_ext;

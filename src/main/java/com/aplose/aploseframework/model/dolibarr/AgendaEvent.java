@@ -8,9 +8,8 @@ package com.aplose.aploseframework.model.dolibarr;
  *
  * @author oandrade
  */
-public class Contact extends DolibarrObject {
-    public Contact(){
-        endPoint="/contacts";
+public class AgendaEvent extends DolibarrObject {
+    public AgendaEvent(){
+        endPoint="/agendaevents";
     }
-    
 }
