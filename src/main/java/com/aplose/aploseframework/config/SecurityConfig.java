@@ -35,7 +35,7 @@ public class SecurityConfig {
         return http
             .securityMatcher("/api/**")
             .authorizeHttpRequests(auth -> {
-                auth.requestMatchers(HttpMethod.GET, "/api/ping","/api/config","/api/category","/api/dictionnary").permitAll();
+                auth.requestMatchers(HttpMethod.GET, "/api/ping","/api/config/**","/api/category/**","/api/dictionnary/**").permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
