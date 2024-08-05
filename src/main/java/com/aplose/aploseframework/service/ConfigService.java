@@ -5,6 +5,7 @@
 package com.aplose.aploseframework.service;
 
 import com.aplose.aploseframework.model.Config;
+import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.repository.ConfigRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -114,13 +116,13 @@ public class ConfigService {
         }
         return config;
     }
-    
+//    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void createOrUpdate(Config config){
         configRepository.save(config);
         configurations.put(config.getConfigKey(), config);
     }
-    public Config getConfig(String key){
-        return configRepository.findById(key).get();
+    public Optional<Config> getConfig(String key){
+        return configRepository.findById(key);
     }
     public List<Config> getAllConfigs(){
         return configRepository.findAll();
