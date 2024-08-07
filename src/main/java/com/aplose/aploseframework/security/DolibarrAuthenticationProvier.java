@@ -24,8 +24,14 @@ public class DolibarrAuthenticationProvier implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        String token = dolibarrService.login(username, password);
-        if (token!=null&&token.trim().length()>0){
+        String dolibarrToken;
+        try{
+            dolibarrToken = dolibarrService.login(username, password);
+        }
+        catch(Exception e){
+            return authentication;
+        }
+        if ( dolibarrToken!=null && dolibarrToken.trim().length()>0){
             authentication.setAuthenticated(true);
         }
         return authentication;

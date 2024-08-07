@@ -12,10 +12,10 @@ public class RegisterDto {
     private Long id;
 
     @Email(message = "Email is invalid")
-    private String username; // email address ti copy in email field
+    private String personUserAccountUsername; // email address ti copy in email field
 
     @NotNull(message = "Password cannot be null")
-    private String password; 
+    private String personUserAccountPassword; 
 
     @NotNull(message = "Password repeat cannot be null")
     private String passwordRepeat;
@@ -25,17 +25,18 @@ public class RegisterDto {
     private Long personId;
     
     //ajouter un champ pour les pros : CompanyName -> thirdparty->name.
+    private String companyName;
 
-    @NotNull(message = "First name cannot be null")
+    @NotNull(message = "First-name cannot be null")
     private String personFirstName; // contact and user firstname 
 
-    @NotNull(message = "Last name cannot be null")
+    @NotNull(message = "Last-name cannot be null")
     private String personLastName; // contact and user 
 
     private String personPhone; //contact and user
 
     @NotNull(message = "You must provide your civility")
-    private Long personCivilityId;
+    private Long personCivilityRowid;
     
     private Long personAddressId;
 
@@ -67,6 +68,14 @@ public class RegisterDto {
         this.personAddressId = personAddressId; 
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public Long getPersonAddressCountryId(){ 
         return this.personAddressCountryId; 
     }
@@ -74,29 +83,15 @@ public class RegisterDto {
         this.personAddressCountryId = personAddressCountryId; 
     }
 
-    public Long getPersonCivilityId() { 
-        return this.personCivilityId; 
+    public Long getPersonCivilityRowid() { 
+        return this.personCivilityRowid; 
     }
 
-    public void setPersonCivilityId( Long personCivilityId ) { 
-        this.personCivilityId = personCivilityId; 
+    public void setPersonCivilityRowid( Long personCivilityRowid ) { 
+        this.personCivilityRowid = personCivilityRowid; 
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getPasswordRepeat() {
         return passwordRepeat;
@@ -136,6 +131,22 @@ public class RegisterDto {
 
     public void setIsProfessional(Boolean isProfessional) {
         this.isProfessional = isProfessional;
+    }
+
+    public String getPersonUserAccountUsername() {
+        return personUserAccountUsername;
+    }
+
+    public void setPersonUserAccountUsername(String personUserAccountUsername) {
+        this.personUserAccountUsername = personUserAccountUsername;
+    }
+
+    public String getPersonUserAccountPassword() {
+        return personUserAccountPassword;
+    }
+
+    public void setPersonUserAccountPassword(String personUserAccountPassword) {
+        this.personUserAccountPassword = personUserAccountPassword;
     }
 
         

@@ -4,10 +4,18 @@
  */
 package com.aplose.aploseframework.service;
 
-import com.aplose.aploseframework.dto.AuthRequestDTO;
-import com.aplose.aploseframework.dto.AuthResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import com.aplose.aploseframework.ZDEVELOP.developHelper;
+import com.aplose.aploseframework.dto.AuthResponseDTO;
+import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.utils.jwt.JwtTokenUtil;
+
 
 /**
  *
@@ -15,13 +23,40 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuthenticationService {
+
     @Autowired
-    DolibarrService dolibarrService;
-    public String login(String userName, String password) {
+    private DolibarrService dolibarrService;
+    @Autowired
+    private UserAccountService _userAccountService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    
+    public String dolibarrLogin(String userName, String password) {
         //TODO choisir le mode d'authent
         //Dans Dolibarr on ne se préoccupe pas du password
-// retieve du user dolibbar via l'api pour récupérer sa token
-// login et password sont vérifiés par SpringSecurity.
+        // retieve du user dolibbar via l'api pour récupérer sa token
+        // login et password sont vérifiés par SpringSecurity.
         return dolibarrService.login(userName, password);
+    }
+
+
+    public AuthResponseDTO internalLogin(String username, String password){
+     
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken( username, password )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final UserAccount userDetails = userDetailsService.loadUserByUsername(username);
+
+        return new AuthResponseDTO(jwtTokenUtil.generateToken(userDetails), userDetails);
     }
 }

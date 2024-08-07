@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author oandrade
@@ -25,6 +27,7 @@ public class Role implements GrantedAuthority{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    
     private String authority;
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private List<UserAccount> accounts;
     @ManyToMany(fetch = FetchType.EAGER)

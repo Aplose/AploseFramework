@@ -6,6 +6,8 @@ package com.aplose.aploseframework.model;
 
 import com.aplose.aploseframework.model.Permission;
 import com.aplose.aploseframework.model.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,6 +41,7 @@ public class UserAccount implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    @JsonIgnore
     private String password;
     private LocalDate creationDate=LocalDate.now();
     private LocalDateTime updateDateTime=LocalDateTime.now();
@@ -52,6 +55,8 @@ public class UserAccount implements UserDetails {
     private List<Role> roles = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
+    @JsonIgnore
+    private String dolibarrUserId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -182,6 +187,14 @@ public class UserAccount implements UserDetails {
 
     public void setActivationCodeInstant(Instant activationCodeInstant){
         this.activationCodeInstant = activationCodeInstant;
+    }
+
+    public String getDolibarrUserId() {
+        return dolibarrUserId;
+    }
+
+    public void setDolibarrUserId(String dolibarrUserId) {
+        this.dolibarrUserId = dolibarrUserId;
     }
 
 

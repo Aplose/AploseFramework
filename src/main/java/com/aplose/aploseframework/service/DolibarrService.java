@@ -4,6 +4,9 @@
  */
 package com.aplose.aploseframework.service;
 
+
+import com.aplose.aploseframework.model.DolibarrUser;
+import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
 import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.model.dictionnary.Company;
@@ -21,14 +24,10 @@ import com.aplose.aploseframework.model.dictionnary.TicketCategory;
 import com.aplose.aploseframework.model.dictionnary.TicketSeverity;
 import com.aplose.aploseframework.model.dictionnary.TicketType;
 import com.aplose.aploseframework.model.dictionnary.Unit;
-import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -67,14 +66,13 @@ public class DolibarrService {
     }
                  
     RestClient restClient = RestClient.create();
-    
+
     public String login(String login, String password){
-        String token = restClient.post()
+        return restClient.get()
                 .uri(dolibarrApiUrl+"/login?login="+login+"&password="+password) // possible de mettre &reset=1
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(String.class);
-        return token;
     }
     //COMPANY
     public Company getCompanyInfo(){
@@ -100,6 +98,20 @@ public class DolibarrService {
                 .retrieve()
                 .body(dictionaryTypes.get(name));
         return result;
+    }
+
+
+    public String createUser(Person person){
+
+        return restClient.post()
+        .uri(dolibarrApiUrl + "/users?DOLAPIKEY=" + dolibarrUserApiKey)
+        .body(
+            new DolibarrUser(person)
+        )
+        .accept(MediaType.APPLICATION_JSON)
+        .retrieve()
+        .body(String.class)
+        ;
     }
     
 }

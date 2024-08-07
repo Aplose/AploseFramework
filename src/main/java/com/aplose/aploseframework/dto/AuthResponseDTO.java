@@ -4,6 +4,8 @@
  */
 package com.aplose.aploseframework.dto;
 
+import com.aplose.aploseframework.model.UserAccount;
+
 /**
  *
  * @author oandrade
@@ -11,6 +13,15 @@ package com.aplose.aploseframework.dto;
 public class AuthResponseDTO {
 
     private String accessToken;
+    private UserAccount userAccount;
+
+
+    public AuthResponseDTO(){}
+
+    public AuthResponseDTO(String accessToken, UserAccount userAccount){
+        this.accessToken = accessToken;
+        this.userAccount = userAccount;
+    }
 
     public String getAccessToken() {
         return accessToken;
@@ -18,5 +29,13 @@ public class AuthResponseDTO {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public UserAccount getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(UserAccount userAccount) {
+        this.userAccount = userAccount;
     }
 }

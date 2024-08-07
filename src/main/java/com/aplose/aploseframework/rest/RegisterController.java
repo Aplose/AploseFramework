@@ -4,14 +4,26 @@
  */
 package com.aplose.aploseframework.rest;
 
+import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.RegisterDto;
 import com.aplose.aploseframework.dto.UserAccountDto;
 import com.aplose.aploseframework.exception.RegistrationException;
+import com.aplose.aploseframework.model.DolibarrUser;
+import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
+import com.aplose.aploseframework.model.dictionnary.Civility;
+import com.aplose.aploseframework.service.DolibarrService;
+import com.aplose.aploseframework.service.PersonService;
 import com.aplose.aploseframework.service.UserAccountService;
 
 import jakarta.validation.Valid;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +32,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,9 +40,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author oandrade
  */
 @RestController
+@RequestMapping("/api")
 @CrossOrigin
 public class RegisterController {  
     
+    @Autowired
+    private ModelMapper _modelMapper;
     @Autowired
     UserAccountService _userAccountService;
 
@@ -40,9 +56,19 @@ public class RegisterController {
      * @return
      * @throws RegistrationException 
      */
-    @PostMapping("/api/register")
-    public ResponseEntity<UserAccountDto> register(@Valid @RequestBody RegisterDto userAccountDto){
-        return ResponseEntity.ok().body(this._userAccountService.registerUserAccount(userAccountDto));
+    @PostMapping("/register")
+    public ResponseEntity<Person> register(@Valid @RequestBody RegisterDto userAccountDto){
+        
+        if( ! userAccountDto.getPersonUserAccountPassword().equals(userAccountDto.getPasswordRepeat())){
+            throw new RegistrationException("Password and password repeat do not match.");
+        }
+
+        return  ResponseEntity.ok(
+            this._userAccountService.registerUserAccount(
+                this._modelMapper.map(userAccountDto, Person.class),
+                userAccountDto.getIsProfessional()
+            )
+        );
     }
     
 
@@ -51,8 +77,8 @@ public class RegisterController {
      * @return
      * @throws
      */
-    @PatchMapping("/api/accountActivation/{activationCode}")
-    public ResponseEntity<String> activateAccount(@PathVariable String activationCode) {
+    @PatchMapping("/accountActivation/{activationCode}")
+    public ResponseEntity<String> activateAccount(@PathVariable("activationCode") String activationCode) {
         UserAccount userAccount = this._userAccountService.getByActivationCode(activationCode);
         if(userAccount == null){
             return ResponseEntity.badRequest().body("The activation code is invalid");
@@ -62,6 +88,6 @@ public class RegisterController {
             return ResponseEntity.status(HttpStatus.GONE).body("The activation code is expired, a new code has been re-sent");
         }
         this._userAccountService.activateAccount(userAccount);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Activation successfull !");
     }    
 }
