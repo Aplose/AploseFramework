@@ -22,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -89,6 +90,7 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/accountActivation/*", "PATCH")).permitAll();
+                auth.requestMatchers(HttpMethod.GET, "/api/ping","/api/config/**","/api/category/**").permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

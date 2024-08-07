@@ -1,10 +1,13 @@
 package com.aplose.aploseframework.controller;
 
+import com.aplose.aploseframework.model.Config;
 import com.aplose.aploseframework.service.ConfigService;
+import jdk.jfr.BooleanFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -13,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author oandrade
  */
 @Controller
-@RequestMapping("/configuration")
-public class ConfigController {
+@RequestMapping("/admin/configuration")
+public class ConfigurationController {
     @Autowired
     ConfigService configService;
     @GetMapping
@@ -23,8 +26,8 @@ public class ConfigController {
         return "configuration";
     }
     @PostMapping
-    public String updateConfigurationAdminScreen(Model model){
-        
-        return "configuration";
+    public String updateConfigurationAdminScreen(@ModelAttribute Config config){
+        configService.createOrUpdate(config);
+        return "redirect:/admin/configuration";
     }
 }
