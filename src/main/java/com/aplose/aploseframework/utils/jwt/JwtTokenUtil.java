@@ -58,14 +58,6 @@ public class JwtTokenUtil {
         catch(Exception e){
             return null;
         }
-
-        developHelper.printObject(claims, null);
-        claims.get("userAccountId");
-        System.err.println("claims keys:" );
-        claims.keySet().forEach((v)->{System.out.println(v);System.err.println("\n");});
-        System.err.println("claims values:" );
-        claims.values().forEach((v)->{System.out.println(v);System.err.println("\n");});
-
         return claims;
     }
 

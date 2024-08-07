@@ -6,6 +6,9 @@ package com.aplose.aploseframework.rest;
 
 import com.aplose.aploseframework.dto.AuthRequestDTO;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
+import com.aplose.aploseframework.enums.TokenCategoryEnum;
+import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.model.security.Token;
 import com.aplose.aploseframework.service.AuthenticationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +35,25 @@ public class AuthenticationController {
     
     @PostMapping("/login")
     public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO){
-        AuthResponseDTO authResponseDTO = new AuthResponseDTO();
-        authResponseDTO.setAccessToken(authenticationService.dolibarrLogin(authRequestDTO.getUsername(),authRequestDTO.getPassword()));
-        return authResponseDTO;
+        return new AuthResponseDTO(
+            new Token(
+                authenticationService.dolibarrLogin(authRequestDTO.getUsername(),authRequestDTO.getPassword()), 
+                TokenCategoryEnum.DOLIBARR, 
+                null
+            ),
+            new UserAccount()
+        );
     }
     
 
 
     @PostMapping("/internal-login")
     public ResponseEntity<AuthResponseDTO> internalLogin(@RequestBody AuthRequestDTO loginRequest) {
-        return ResponseEntity.ok(this.authenticationService.internalLogin(loginRequest.getUsername(), loginRequest.getPassword()));
+        return ResponseEntity.ok(
+            this.authenticationService.internalLogin(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            )
+        );
     }
 }

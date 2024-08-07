@@ -4,7 +4,10 @@
  */
 package com.aplose.aploseframework.dto;
 
+import java.util.Date;
+
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.model.security.Token;
 
 /**
  *
@@ -12,23 +15,23 @@ import com.aplose.aploseframework.model.UserAccount;
  */
 public class AuthResponseDTO {
 
-    private String accessToken;
+    private Token token;
     private UserAccount userAccount;
 
 
     public AuthResponseDTO(){}
 
-    public AuthResponseDTO(String accessToken, UserAccount userAccount){
-        this.accessToken = accessToken;
+    public AuthResponseDTO(Token token, UserAccount userAccount){
+        this.token = token;
         this.userAccount = userAccount;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public Token getToken() {
+        return token;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setToken(Token token) {
+        this.token = token;
     }
 
     public UserAccount getUserAccount() {
@@ -38,4 +41,8 @@ public class AuthResponseDTO {
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
     }
+
+
+
+
 }

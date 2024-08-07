@@ -41,8 +41,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserAccountService implements UserDetailsService{
 
-    @Value("${spring.user-account.second-to-activate-account}")
-    private Long secondToActivateAccount;
+
     @Value("${aplose.framework.superAdmin.defaultPassword}")
     private String superAdminDefaultPassword;
     
@@ -96,75 +95,14 @@ public class UserAccountService implements UserDetailsService{
     }
 
 
-
-    public Person registerUserAccount(Person person, Boolean isProfessionnalAccount){
-
-        person.getUserAccount().setPassword(passwordEncoder.encode(person.getUserAccount().getPassword()));
-
-        if(isProfessionnalAccount){
-            person.getUserAccount().setRoles(List.of(this._roleService.getByAuthority(RoleEnum.ROLE_PROFESSIONAL.toString())));
-        }
-
-        this.setAndSendActivationCode(person.getUserAccount());
-        
-
-        person.setUserAccount(this._userAccountRepository.save(person.getUserAccount()));
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("sqlfilters", "(t.rowid:like:'" + person.getCivility().getRowid() + "')");
-
-        Civility civility = (Civility) this._dolibarrService.getDictionnary("civilities", map)[0];
-
-        if(civility.getRowid() != person.getCivility().getRowid()){
-            this._userAccountRepository.delete(person.getUserAccount());
-            throw new RegistrationException("La civilité que vous avez renseigné n'éxiste pas ou n'est pas correcte.");
-        }
-
-        person.setCivility( civility );
-
-        person.getUserAccount().setDolibarrUserId( 
-            this._dolibarrService.createUser(person) 
-        );
-        person = this._personService.save(person);
-
-        return person;
+    public UserAccount save(UserAccount userAccount){
+        return this._userAccountRepository.save(userAccount);
     }
 
 
-
-    
-    public void reSendActivationCode(UserAccount userAccount){
-        this.setAndSendActivationCode(userAccount);
-        this._userAccountRepository.save(userAccount);
-    }
-    
-
-
-    public void setAndSendActivationCode(UserAccount userAccount){
-        DecimalFormat format = new DecimalFormat("0000");
-        userAccount.setActivationCode(format.format(new SecureRandom().nextInt(9999)));
-        userAccount.setActivationCodeInstant(Instant.now());
-        emailService.sendRegistrationSuccessfullMessage(userAccount.getLocale(),
-                userAccount.getActivationCode(),
-                userAccount.getUsername());
+    public void delete(UserAccount userAccount){
+        this._userAccountRepository.delete(userAccount);
     }
 
-
-
-    public Boolean activationCodeIsExpired(UserAccount userAccount){
-        return userAccount.getActivationCodeInstant().plusSeconds(secondToActivateAccount).isBefore(Instant.now()) ?
-            true 
-            : 
-            false;
-    }
-
-
-
-    public void activateAccount(UserAccount userAccount) {
-        userAccount.setEnabled(Boolean.TRUE);
-        userAccount.setActivationCode(null);
-        userAccount.setActivationCodeInstant(null);
-        _userAccountRepository.save(userAccount);
-    }
 
 }

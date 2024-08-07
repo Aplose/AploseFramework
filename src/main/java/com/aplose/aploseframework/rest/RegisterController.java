@@ -13,8 +13,10 @@ import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
 import com.aplose.aploseframework.model.dictionnary.Civility;
+import com.aplose.aploseframework.service.AuthenticationService;
 import com.aplose.aploseframework.service.DolibarrService;
 import com.aplose.aploseframework.service.PersonService;
+import com.aplose.aploseframework.service.UserAccountActivationService;
 import com.aplose.aploseframework.service.UserAccountService;
 
 import jakarta.validation.Valid;
@@ -47,7 +49,11 @@ public class RegisterController {
     @Autowired
     private ModelMapper _modelMapper;
     @Autowired
-    UserAccountService _userAccountService;
+    private UserAccountService _userAccountService;
+    @Autowired
+    private AuthenticationService _authenticationService;
+    @Autowired
+    private UserAccountActivationService _accountActivationService;
 
     
     /**
@@ -64,7 +70,7 @@ public class RegisterController {
         }
 
         return  ResponseEntity.ok(
-            this._userAccountService.registerUserAccount(
+            this._authenticationService.register(
                 this._modelMapper.map(userAccountDto, Person.class),
                 userAccountDto.getIsProfessional()
             )
@@ -83,11 +89,11 @@ public class RegisterController {
         if(userAccount == null){
             return ResponseEntity.badRequest().body("The activation code is invalid");
         }
-        if(this._userAccountService.activationCodeIsExpired(userAccount)){
-            this._userAccountService.reSendActivationCode(userAccount);
+        if(this._accountActivationService.activationCodeIsExpired(userAccount)){
+            this._accountActivationService.reSendActivationCode(userAccount);
             return ResponseEntity.status(HttpStatus.GONE).body("The activation code is expired, a new code has been re-sent");
         }
-        this._userAccountService.activateAccount(userAccount);
+        this._accountActivationService.activateAccount(userAccount);
         return ResponseEntity.ok().body("Activation successfull !");
     }    
 }
