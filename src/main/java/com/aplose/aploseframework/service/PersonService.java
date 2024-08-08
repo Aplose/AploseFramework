@@ -27,7 +27,7 @@ public class PersonService {
     public Person save(Person person){
         return this._personRepository.save(person);
     }
-    public Page<UserAccount> searchProfessional(String query, String countryCode, PageRequest pageRequest){
+    public Page<Person> searchProfessional(String query, String countryCode, PageRequest pageRequest){
         return this._personRepository.findProfessionalsByFullNameContainingIgnoreCase(query, countryCode, pageRequest);
     }
 }

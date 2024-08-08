@@ -22,8 +22,8 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
     
     public Person findByLastName(String lastName);
     
-    @Query("SELECT p.userAccount FROM Person p LEFT JOIN p.userAccount ua LEFT JOIN ua.roles r WHERE p.address.country.code=:countryCode AND r.authority='ROLE_PROFESSIONAL' AND LOWER(p.fullName) LIKE LOWER(CONCAT('%', :query, '%'))")
-    public Page<UserAccount> findProfessionalsByFullNameContainingIgnoreCase(
+    @Query("SELECT p FROM Person p LEFT JOIN p.userAccount ua LEFT JOIN ua.roles r WHERE p.address.country.code=:countryCode AND r.authority='ROLE_PROFESSIONAL' AND LOWER(p.fullName) LIKE LOWER(CONCAT('%', :query, '%'))")
+    public Page<Person> findProfessionalsByFullNameContainingIgnoreCase(
         @Param("query") String query,
         @Param("countryCode") String countryCode,
         PageRequest pageRequest
