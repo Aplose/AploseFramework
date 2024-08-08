@@ -1,33 +1,13 @@
 package com.aplose.aploseframework.service;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
-import com.aplose.aploseframework.dto.RegisterDto;
-import com.aplose.aploseframework.dto.UserAccountDto;
-import com.aplose.aploseframework.exception.RegistrationException;
-import com.aplose.aploseframework.model.DolibarrUser;
-import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
-import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.repository.UserAccountRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.Embedded;
-
-import java.security.SecureRandom;
-import java.text.DecimalFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -4,27 +4,14 @@
  */
 package com.aplose.aploseframework.rest;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.RegisterDto;
-import com.aplose.aploseframework.dto.UserAccountDto;
 import com.aplose.aploseframework.exception.RegistrationException;
-import com.aplose.aploseframework.model.DolibarrUser;
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
-import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
-import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.service.AuthenticationService;
-import com.aplose.aploseframework.service.DolibarrService;
-import com.aplose.aploseframework.service.PersonService;
 import com.aplose.aploseframework.service.UserAccountActivationService;
 import com.aplose.aploseframework.service.UserAccountService;
-
 import jakarta.validation.Valid;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
