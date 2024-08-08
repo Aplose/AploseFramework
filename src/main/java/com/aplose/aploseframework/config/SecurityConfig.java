@@ -91,6 +91,11 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/accountActivation/*", "PATCH")).permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/api/ping","/api/config/**","/api/category/**").permitAll();
+                auth.requestMatchers(HttpMethod.GET, 
+                        "/api/ping",
+                        "/api/config/**",
+                        "/api/dolibarr/**",
+                        "/api/dictionnary/**").permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

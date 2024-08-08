@@ -14,6 +14,10 @@ public abstract class DolibarrObject {
     String ref;
     String ref_ext;
     Integer status;
+    String module;
+    String import_key;
+    String label;
+    String description;
 
     public Integer getId() {
         return id;
@@ -61,6 +65,38 @@ public abstract class DolibarrObject {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public String getImport_key() {
+        return import_key;
+    }
+
+    public void setImport_key(String import_key) {
+        this.import_key = import_key;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
 }
