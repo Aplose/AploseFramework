@@ -29,8 +29,8 @@ public class DolibarrController {
     DolibarrService dolibarrService;
     
     @GetMapping("/getAll/{name}")
-    public DolibarrObject[] getAll(@PathVariable("name") String name){
-        return dolibarrService.getAll(name, null);
+    public DolibarrObject[] getAll(@PathVariable("name") String name,@RequestParam(required = false) Map<String,String> params){        
+        return dolibarrService.getAll(name, params);
     }
     
     /**

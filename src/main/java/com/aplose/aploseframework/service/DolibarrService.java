@@ -262,6 +262,8 @@ public class DolibarrService {
         return result;
     }
     
+    
+    
     public DocumentFile getImage(String modulePart, String id){
         DocumentFile documentFile=new DocumentFile();
         //d'abord on va cherche le document de type image...
