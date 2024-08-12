@@ -287,14 +287,15 @@ public class DolibarrService {
         }
         return documentFile;
     }
-    /**
-     * view Dolibarr image from document of a module (product,...)
-     * 
-     */
+
     public DocumentFile getFile(Document document, String modulePart){
-        String file = URLEncoder.encode(document.getLevel1name())+"/"+URLEncoder.encode(document.getRelativename());        
+        return getFile(document.getLevel1name(), document.getRelativename(), modulePart);
+    }
+    
+    public DocumentFile getFile(String level1Name,String relativeName, String modulePart){
+        String file = URLEncoder.encode(level1Name)+"/"+URLEncoder.encode(relativeName);        
         String url = dolibarrApiUrl+"/documents/download?DOLAPIKEY="+dolibarrUserApiKey+"&modulepart="+modulePart+"&original_file="+file;
-        DocumentFile documentFile = new DocumentFile();
+        DocumentFile documentFile = new DocumentFile();        
         try{
             documentFile = restClient.get()
                 .uri(url)
@@ -306,5 +307,4 @@ public class DolibarrService {
         }
         return documentFile;
     }
-
 }

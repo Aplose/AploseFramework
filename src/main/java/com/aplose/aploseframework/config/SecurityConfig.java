@@ -88,6 +88,7 @@ public class SecurityConfig {
                         "/api/config/**",
                         "/api/dolibarr/**",
                         "/api/dictionnary/**").permitAll();
+                auth.requestMatchers(HttpMethod.POST,"/api/dolibarr/**").permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
