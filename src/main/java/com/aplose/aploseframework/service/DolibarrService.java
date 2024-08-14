@@ -69,10 +69,12 @@ public class DolibarrService {
     private final Map<String, Class<? extends AbstractDictionnary[]>> dictionaryTypes = new HashMap<>();
     private final Map<String, Class<? extends DolibarrObject[]>> dolibarrObjectArrayTypes = new HashMap<>();
     private final Map<String,String> dolibarrObjectRouteNameByType = new HashMap<>();
-    RestClient restClient=RestClient.create();
+    @Autowired
+    RestClient restClient;
 
     @PostConstruct
     private void init() {
+        
         //types and names
         dolibarrObjectRouteNameByType.put("product", "products");
         dolibarrObjectRouteNameByType.put("category", "categories");
