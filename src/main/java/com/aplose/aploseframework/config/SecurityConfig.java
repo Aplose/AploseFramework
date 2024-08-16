@@ -4,16 +4,11 @@
  */
 package com.aplose.aploseframework.config;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.filter.JwtAuthFilter;
-import com.aplose.aploseframework.model.RoleEnum;
-import com.aplose.aploseframework.repository.UserAccountRepository;
 import com.aplose.aploseframework.security.DolibarrAuthenticationProvier;
 import com.aplose.aploseframework.service.UserAccountService;
 
 import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -90,7 +85,12 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/accountActivation/*", "PATCH")).permitAll();
-                auth.requestMatchers(HttpMethod.GET, "/api/ping","/api/config/**","/api/category/**").permitAll();
+                auth.requestMatchers(HttpMethod.GET, 
+                        "/api/ping",
+                        "/api/config/**",
+                        "/api/dolibarr/**",
+                        "/api/dictionnary/**").permitAll();
+                auth.requestMatchers(HttpMethod.POST,"/api/dolibarr/**").permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
