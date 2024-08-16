@@ -13,6 +13,7 @@ import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.repository.UserAccountRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
@@ -79,7 +80,7 @@ public class UserAccountService implements UserDetailsService{
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserAccount loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccount userAccount = _userAccountRepository.findByUsername(username);
         if(userAccount==null){
             throw new UsernameNotFoundException("User "+username+" not found.");
@@ -88,10 +89,23 @@ public class UserAccountService implements UserDetailsService{
     }
     
 
+    public UserAccount getByStripeLinkedAccountId(String stripeLinkedAccountId){
+        UserAccount userAccount = this._userAccountRepository.findByStripeLinkedAccountId(stripeLinkedAccountId);
+        if(userAccount == null){
+            throw new EntityNotFoundException("No UserAccount found with this Stripe linked account id.");
+        }
+        return userAccount;
+    } 
+
 
     public UserAccount getByActivationCode(String activationCode){
         UserAccount userAccount = _userAccountRepository.findByActivationCode(activationCode);
         return userAccount;
+    }
+
+
+    public UserAccount getById(Long userAccountId){
+        return this._userAccountRepository.findById(userAccountId).orElseThrow(() -> new EntityNotFoundException("UserAccount not found in database"));
     }
 
 

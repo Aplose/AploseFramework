@@ -4,18 +4,14 @@
  */
 package com.aplose.aploseframework.model;
 
-import com.aplose.aploseframework.model.Permission;
-import com.aplose.aploseframework.model.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
@@ -57,6 +54,14 @@ public class UserAccount implements UserDetails {
     private List<Permission> permissions = new ArrayList<>();
     @JsonIgnore
     private String dolibarrUserId;
+    @JsonIgnore
+    private String stripeLinkedAccountId;
+    @JsonIgnore
+    private Date stripeLinkedAccountCreatedAt;
+    @JsonIgnore
+    private Boolean stripeLinkedAccountIsVerified = false;
+    @JsonIgnore
+    private Boolean stripeLinkedAccountVerificationRequireInput = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -197,5 +202,35 @@ public class UserAccount implements UserDetails {
         this.dolibarrUserId = dolibarrUserId;
     }
 
+    public String getStripeLinkedAccountId() {
+        return stripeLinkedAccountId;
+    }
 
+    public void setStripeLinkedAccountId(String stripeLinkedAccountId) {
+        this.stripeLinkedAccountId = stripeLinkedAccountId;
+    }
+
+    public Date getStripeLinkedAccountCreatedAt() {
+        return stripeLinkedAccountCreatedAt;
+    }
+
+    public void setStripeLinkedAccountCreatedAt(Date stripeLinkedAccountCreatedAt) {
+        this.stripeLinkedAccountCreatedAt = stripeLinkedAccountCreatedAt;
+    }
+
+    public Boolean getStripeLinkedAccountIsVerified() {
+        return stripeLinkedAccountIsVerified;
+    }
+
+    public void setStripeLinkedAccountIsVerified(Boolean stripeLinkedAccountIsVerified) {
+        this.stripeLinkedAccountIsVerified = stripeLinkedAccountIsVerified;
+    }
+
+    public Boolean getStripeLinkedAccountVerificationRequireInput() {
+        return stripeLinkedAccountVerificationRequireInput;
+    }
+
+    public void setStripeLinkedAccountVerificationRequireInput(Boolean stripeLinkedAccountVerificationRequireInput) {
+        this.stripeLinkedAccountVerificationRequireInput = stripeLinkedAccountVerificationRequireInput;
+    }
 }

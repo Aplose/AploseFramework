@@ -53,8 +53,6 @@ public class AuthenticationService {
     @Autowired
     private RoleService _roleService;
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-    @Autowired
     private UserAccountActivationService _accountActivationService;
 
 
@@ -110,7 +108,7 @@ public class AuthenticationService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final UserAccount userDetails = userDetailsService.loadUserByUsername(username);
+        final UserAccount userDetails = this._userAccountService.loadUserByUsername(username);
         final String token = this._jwtTokenUtil.generateToken(userDetails);
 
         return new AuthResponseDTO(

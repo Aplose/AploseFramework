@@ -29,6 +29,7 @@ public class DolibarrAuthenticationProvier implements AuthenticationProvider {
             dolibarrToken = dolibarrService.login(username, password);
         }
         catch(Exception e){
+            authentication.setAuthenticated(false);
             return authentication;
         }
         if ( dolibarrToken!=null && dolibarrToken.trim().length()>0){

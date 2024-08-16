@@ -10,7 +10,6 @@ import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.repository.UserAccountRepository;
 import com.aplose.aploseframework.security.DolibarrAuthenticationProvier;
 import com.aplose.aploseframework.service.UserAccountService;
-import com.aplose.aploseframework.service.UserDetailsServiceImpl;
 
 import java.util.Arrays;
 
@@ -42,7 +41,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 
 
     @Bean
@@ -87,6 +85,8 @@ public class SecurityConfig {
             .securityMatcher("/api/**")
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/authentication/**", "POST")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "POST")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/accountActivation/*", "PATCH")).permitAll();
