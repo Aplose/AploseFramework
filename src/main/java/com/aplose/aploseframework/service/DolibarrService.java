@@ -227,6 +227,24 @@ public class DolibarrService {
         }
         return result;
     }
+    //PRODUCTS
+    public Category[] getCategoriesForProduct(String id) {
+        Category[] result = new Category[0];
+        String uri = dolibarrApiUrl+"/products/"+id+"/categories?DOLAPIKEY="+dolibarrUserApiKey;
+        try{
+            result = restClient.get()
+                .uri(uri)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(Category[].class);
+        }catch(RestClientException rce){
+            System.out.println("No category for product "+id);
+        }
+        return result;
+    }
+
+    
+    //DOLIBARROBJECT
     
     /**
      * Create any DolibarrObject welformed (Thirdparty, contact, user...)
@@ -265,7 +283,7 @@ public class DolibarrService {
     }
     
     
-    
+    //DOCUMENTS
     public DocumentFile getImage(String modulePart, String id){
         DocumentFile documentFile=new DocumentFile();
         //d'abord on va cherche le document de type image...
@@ -309,4 +327,5 @@ public class DolibarrService {
         }
         return documentFile;
     }
+
 }

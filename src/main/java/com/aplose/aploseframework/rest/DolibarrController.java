@@ -53,5 +53,11 @@ public class DolibarrController {
     public DolibarrObject[] getAllObjectsForCategory(@PathVariable("idCat") String idCat,@RequestParam("type") String type){
        return dolibarrService.getAllObjectsForCategory(idCat, type);
     }
+    @GetMapping("/product/{id}/category")
+    public Category[] getCategoryForProduct(@PathVariable("id") String id){
+        Category[] categories = dolibarrService.getCategoriesForProduct(id);
+        return categories;
+    }
+    
     
 }
