@@ -8,8 +8,7 @@ import com.aplose.aploseframework.dto.RegisterDto;
 import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
-import com.aplose.aploseframework.service.AuthenticationService;
-import com.aplose.aploseframework.service.UserAccountActivationService;
+import com.aplose.aploseframework.service.RegisterService;
 import com.aplose.aploseframework.service.UserAccountService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -38,28 +37,26 @@ public class RegisterController {
     @Autowired
     private UserAccountService _userAccountService;
     @Autowired
-    private AuthenticationService _authenticationService;
-    @Autowired
-    private UserAccountActivationService _accountActivationService;
+    private RegisterService _registerService;
 
     
     /**
      * 
-     * @param userAccountDto
-     * @return
+     * @param registerDto
+     * @return ResponseEntity<Person>
      * @throws RegistrationException 
      */
     @PostMapping("/register")
-    public ResponseEntity<Person> register(@Valid @RequestBody RegisterDto userAccountDto){
+    public ResponseEntity<Person> register(@Valid @RequestBody RegisterDto registerDto){
         
-        if( ! userAccountDto.getPersonUserAccountPassword().equals(userAccountDto.getPasswordRepeat())){
+        if( ! registerDto.getUserAccountPassword().equals(registerDto.getPasswordRepeat())){
             throw new RegistrationException("Password and password repeat do not match.");
         }
 
         return  ResponseEntity.ok(
-            this._authenticationService.register(
-                this._modelMapper.map(userAccountDto, Person.class),
-                userAccountDto.getIsProfessional()
+            this._registerService.register(
+                this._modelMapper.map(registerDto, Person.class),
+                registerDto.getIsProfessional()
             )
         );
     }
@@ -70,17 +67,17 @@ public class RegisterController {
      * @return
      * @throws
      */
-    @PatchMapping("/accountActivation/{activationCode}")
+    @PatchMapping("/account-activation/{activationCode}")
     public ResponseEntity<String> activateAccount(@PathVariable("activationCode") String activationCode) {
         UserAccount userAccount = this._userAccountService.getByActivationCode(activationCode);
         if(userAccount == null){
             return ResponseEntity.badRequest().body("The activation code is invalid");
         }
-        if(this._accountActivationService.activationCodeIsExpired(userAccount)){
-            this._accountActivationService.reSendActivationCode(userAccount);
+        if(this._registerService.activationCodeIsExpired(userAccount)){
+            this._registerService.reSendActivationCode(userAccount);
             return ResponseEntity.status(HttpStatus.GONE).body("The activation code is expired, a new code has been re-sent");
         }
-        this._accountActivationService.activateAccount(userAccount);
+        this._registerService.activateAccount(userAccount);
         return ResponseEntity.ok().body("Activation successfull !");
     }    
 }

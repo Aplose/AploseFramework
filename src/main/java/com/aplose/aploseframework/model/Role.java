@@ -35,8 +35,8 @@ public class Role implements GrantedAuthority{
     
     public Role(){}
 
-    public Role(String role) {
-        authority = "ROLE_"+role;
+    public Role(RoleEnum role) {
+        authority = role.toString();
     }
     
 

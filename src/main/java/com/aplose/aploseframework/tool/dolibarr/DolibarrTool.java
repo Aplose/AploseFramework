@@ -1,9 +1,9 @@
-package com.aplose.aploseframework.utils.dolibarr;
+package com.aplose.aploseframework.tool.dolibarr;
 
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
 
-    public class DolibarrUtil {
+    public class DolibarrTool {
     
         public static String createDolibarrLogin(String username){
             return username.replace('@', '_');

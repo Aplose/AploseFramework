@@ -1,8 +1,6 @@
 package com.aplose.aploseframework.service;
 
 
-import com.aplose.aploseframework.model.DolibarrUser;
-import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
 import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.model.dictionnary.Company;
@@ -10,7 +8,6 @@ import com.aplose.aploseframework.model.dictionnary.Country;
 import com.aplose.aploseframework.model.dictionnary.Currency;
 import com.aplose.aploseframework.model.dictionnary.EventType;
 import com.aplose.aploseframework.model.dictionnary.LegalForm;
-import com.aplose.aploseframework.model.dictionnary.PaymentTerm;
 import com.aplose.aploseframework.model.dictionnary.PaymentType;
 import com.aplose.aploseframework.model.dictionnary.Region;
 import com.aplose.aploseframework.model.dictionnary.ShippingMethod;
@@ -42,17 +39,15 @@ import com.aplose.aploseframework.model.dolibarr.Task;
 import com.aplose.aploseframework.model.dolibarr.Ticket;
 import com.aplose.aploseframework.model.dolibarr.User;
 import com.aplose.aploseframework.model.dolibarr.Warehouse;
-import com.aplose.aploseframework.tool.UrlTools;
 import jakarta.annotation.PostConstruct;
 import java.net.URLEncoder;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -68,6 +63,7 @@ public class DolibarrService {
     private String dolibarrUserApiKey;
     private final Map<String, Class<? extends AbstractDictionnary[]>> dictionaryTypes = new HashMap<>();
     private final Map<String, Class<? extends DolibarrObject[]>> dolibarrObjectArrayTypes = new HashMap<>();
+    private final Map<String, Class<? extends DolibarrObject>> dolibarrObjectTypes = new HashMap<>();
     private final Map<String,String> dolibarrObjectRouteNameByType = new HashMap<>();
     @Autowired
     RestClient restClient;
@@ -115,6 +111,28 @@ public class DolibarrService {
         dolibarrObjectArrayTypes.put("tickets", Ticket[].class);
         dolibarrObjectArrayTypes.put("users", User[].class);
         dolibarrObjectArrayTypes.put("warehouses", Warehouse[].class);
+
+        dolibarrObjectTypes.put("agendaevents", AgendaEvent.class);
+        dolibarrObjectTypes.put("bankaccounts", BankAccount.class);
+        dolibarrObjectTypes.put("categories", Category.class);
+        dolibarrObjectTypes.put("contacts", Contact.class);
+        dolibarrObjectTypes.put("contracts", Contract.class);
+        dolibarrObjectTypes.put("documents", Document.class);
+        dolibarrObjectTypes.put("expensereports", ExpenseReport.class);
+        dolibarrObjectTypes.put("invoices", Invoice.class);
+        dolibarrObjectTypes.put("orders", Order.class);
+        dolibarrObjectTypes.put("products", Product.class);
+        dolibarrObjectTypes.put("product", Product.class);
+        dolibarrObjectTypes.put("projects", Project.class);
+        dolibarrObjectTypes.put("proposals", Proposal.class);
+        dolibarrObjectTypes.put("stockmovements", StockMovement.class);
+        dolibarrObjectTypes.put("supplierinvoices", SupplierInvoice.class);
+        dolibarrObjectTypes.put("supplierorders", SupplierOrder.class);
+        dolibarrObjectTypes.put("tasks", Task.class);
+        dolibarrObjectTypes.put("thirdparties", ThirdParty.class);
+        dolibarrObjectTypes.put("tickets", Ticket.class);
+        dolibarrObjectTypes.put("users", User.class);
+        dolibarrObjectTypes.put("warehouses", Warehouse.class);
 
 
         dolibarrApiUrl = configService.getStringConfig("dolibarr.api.url");
@@ -177,19 +195,6 @@ public class DolibarrService {
     }
 
 
-    public String createUser(Person person){
-
-        return restClient.post()
-        .uri(dolibarrApiUrl + "/users?DOLAPIKEY=" + dolibarrUserApiKey)
-        .body(
-            new DolibarrUser(person)
-        )
-        .accept(MediaType.APPLICATION_JSON)
-        .retrieve()
-        .body(String.class)
-        ;
-    }
-
     //CATEGORY
     public Category[] getAllCategories(String type,Map<String,String> params){
         StringBuilder sb = new StringBuilder();
@@ -232,13 +237,13 @@ public class DolibarrService {
      * Create any DolibarrObject welformed (Thirdparty, contact, user...)
      * @return Integer The id of created Object
     */   
-    public Integer createDolibarrObject(DolibarrObject dolibarrObject){
-        ResponseEntity<Integer> response = restClient.post()
+    public Long createDolibarrObject(DolibarrObject dolibarrObject){
+        ResponseEntity<Long> response = restClient.post()
                 .uri(dolibarrApiUrl+dolibarrObject.getEndPoint()+"?DOLAPIKEY="+dolibarrUserApiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(dolibarrObject)
-                .retrieve().toEntity(Integer.class);
+                .retrieve().toEntity(Long.class);
         return response.getBody();
     }
     /**
@@ -263,7 +268,52 @@ public class DolibarrService {
         }
         return result;
     }
+
+
+    /**
+     * Get one Dolibarr object by id
+     */
+    public DolibarrObject getById(String name, Long id){
+        try{
+            return this.restClient.get()
+                .uri(dolibarrApiUrl + "/" + name + "/" + String.valueOf(id) + "?DOLAPIKEY=" + dolibarrUserApiKey)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(dolibarrObjectTypes.get(name));
+        }
+        catch(RestClientException e){
+            System.err.println("\n\n\tRestClientException DolibarrService.getById(): " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    public void update(String name, Long id, DolibarrObject entity){
+        this.restClient.put()
+            .uri(dolibarrApiUrl + "/" + name + "/" + id + "?DOLAPIKEY=" + dolibarrUserApiKey)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(entity)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(dolibarrObjectTypes.get(name))
+            ;
+    }
     
+
+    public Long createExternalUser(Long contactId, String login, String password){
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("login", login);
+        map.put("password", password);
+
+        return this.restClient.post()
+            .uri(dolibarrApiUrl + "/contacts/" + contactId + "/createUser?DOLAPIKEY=" + dolibarrUserApiKey)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(map)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(Long.class);
+    }
     
     
     public DocumentFile getImage(String modulePart, String id){

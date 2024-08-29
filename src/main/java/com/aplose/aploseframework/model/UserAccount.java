@@ -6,6 +6,7 @@ package com.aplose.aploseframework.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +38,7 @@ public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String username;
     @JsonIgnore
     private String password;
@@ -46,22 +48,31 @@ public class UserAccount implements UserDetails {
     private Boolean enabled=Boolean.FALSE;
     private Boolean locked=Boolean.FALSE;    
     private Locale locale;
+    private String companyName;
     private String activationCode;
     private Instant activationCodeInstant;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Permission> permissions = new ArrayList<>();
+    
     @JsonIgnore
-    private String dolibarrUserId;
+    private Long dolibarrThirdPartyId;
     @JsonIgnore
-    private String stripeLinkedAccountId;
+    private Long dolibarrContactId;
     @JsonIgnore
-    private Date stripeLinkedAccountCreatedAt;
+    private Long dolibarrUserId;
+
+
     @JsonIgnore
-    private Boolean stripeLinkedAccountIsVerified = false;
+    private Boolean stripeApplicationIsAuthorized; // L'application (SerenityDate) est autorisée par le propriétaire du compte connecté
     @JsonIgnore
-    private Boolean stripeLinkedAccountVerificationRequireInput = true;
+    private Boolean stripeExternalAccountIsCreated; // Un compte bancaire à été renseigner à Stripe
+    @JsonIgnore
+    private Boolean stripCardPaymentIsEnabled; // Les payments par carte son possibles (nécéssaire pour pouvoir faire des transfers)
+    @JsonIgnore
+    private Boolean stripeTransferIsEnabled; // Les viremments sont possibles 
+    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -98,6 +109,10 @@ public class UserAccount implements UserDetails {
         return enabled;
     }
 
+    public Boolean isProfessionnalAccount(){
+        return this.roles.stream().anyMatch(role -> role.getAuthority().equals(RoleEnum.ROLE_PROFESSIONAL.toString()));
+    }
+
     public Long getId() {
         return id;
     }
@@ -106,12 +121,28 @@ public class UserAccount implements UserDetails {
         this.id = id;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public LocalDate getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
+    }
+
+    public void setUpdateDateTime(LocalDateTime updateDateTime) {
+        this.updateDateTime = updateDateTime;
     }
 
     public LocalDate getExpirationDate() {
@@ -138,20 +169,36 @@ public class UserAccount implements UserDetails {
         this.locked = locked;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Locale getLocale() {
         return locale;
     }
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public Instant getActivationCodeInstant() {
+        return activationCodeInstant;
+    }
+
+    public void setActivationCodeInstant(Instant activationCodeInstant) {
+        this.activationCodeInstant = activationCodeInstant;
     }
 
     public List<Role> getRoles() {
@@ -170,67 +217,61 @@ public class UserAccount implements UserDetails {
         this.permissions = permissions;
     }
 
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
+    public Long getDolibarrThirdPartyId() {
+        return dolibarrThirdPartyId;
     }
 
-    public void setUpdateDateTime(LocalDateTime updateDateTime) {
-        this.updateDateTime = updateDateTime;
+    public void setDolibarrThirdPartyId(Long dolibarrThirdPartyId) {
+        this.dolibarrThirdPartyId = dolibarrThirdPartyId;
     }
 
-    public String getActivationCode() {
-        return activationCode;
+    public Long getDolibarrContactId() {
+        return dolibarrContactId;
     }
 
-    public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
+    public void setDolibarrContactId(Long dolibarrContactId) {
+        this.dolibarrContactId = dolibarrContactId;
     }
 
-    public Instant getActivationCodeInstant(){
-        return this.activationCodeInstant;
-    }
-
-    public void setActivationCodeInstant(Instant activationCodeInstant){
-        this.activationCodeInstant = activationCodeInstant;
-    }
-
-    public String getDolibarrUserId() {
+    public Long getDolibarrUserId() {
         return dolibarrUserId;
     }
 
-    public void setDolibarrUserId(String dolibarrUserId) {
+    public void setDolibarrUserId(Long dolibarrUserId) {
         this.dolibarrUserId = dolibarrUserId;
     }
 
-    public String getStripeLinkedAccountId() {
-        return stripeLinkedAccountId;
+    public Boolean getStripeApplicationIsAuthorized() {
+        return stripeApplicationIsAuthorized;
     }
 
-    public void setStripeLinkedAccountId(String stripeLinkedAccountId) {
-        this.stripeLinkedAccountId = stripeLinkedAccountId;
+    public void setStripeApplicationIsAuthorized(Boolean stripeApplicationIsAuthorized) {
+        this.stripeApplicationIsAuthorized = stripeApplicationIsAuthorized;
     }
 
-    public Date getStripeLinkedAccountCreatedAt() {
-        return stripeLinkedAccountCreatedAt;
+    public Boolean getStripeExternalAccountIsCreated() {
+        return stripeExternalAccountIsCreated;
     }
 
-    public void setStripeLinkedAccountCreatedAt(Date stripeLinkedAccountCreatedAt) {
-        this.stripeLinkedAccountCreatedAt = stripeLinkedAccountCreatedAt;
+    public void setStripeExternalAccountIsCreated(Boolean stripeExternalAccountIsCreated) {
+        this.stripeExternalAccountIsCreated = stripeExternalAccountIsCreated;
     }
 
-    public Boolean getStripeLinkedAccountIsVerified() {
-        return stripeLinkedAccountIsVerified;
+    public Boolean getStripCardPaymentIsEnabled() {
+        return stripCardPaymentIsEnabled;
     }
 
-    public void setStripeLinkedAccountIsVerified(Boolean stripeLinkedAccountIsVerified) {
-        this.stripeLinkedAccountIsVerified = stripeLinkedAccountIsVerified;
+    public void setStripCardPaymentIsEnabled(Boolean stripCardPaymentIsEnabled) {
+        this.stripCardPaymentIsEnabled = stripCardPaymentIsEnabled;
     }
 
-    public Boolean getStripeLinkedAccountVerificationRequireInput() {
-        return stripeLinkedAccountVerificationRequireInput;
+    public Boolean getStripeTransferIsEnabled() {
+        return stripeTransferIsEnabled;
     }
 
-    public void setStripeLinkedAccountVerificationRequireInput(Boolean stripeLinkedAccountVerificationRequireInput) {
-        this.stripeLinkedAccountVerificationRequireInput = stripeLinkedAccountVerificationRequireInput;
+    public void setStripeTransferIsEnabled(Boolean stripeTransferIsEnabled) {
+        this.stripeTransferIsEnabled = stripeTransferIsEnabled;
     }
+
+    
 }

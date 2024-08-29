@@ -10,7 +10,6 @@ import java.util.List;
  * @author oandrade
  */
 public class Category extends DolibarrObject {
-    private Integer id;
     @JsonProperty("fk_parent")
     private Integer parentId;
     private List<Category> childs = new ArrayList<>();
@@ -20,13 +19,6 @@ public class Category extends DolibarrObject {
     private String description;
     private String photo;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getParentId() {
         return parentId;

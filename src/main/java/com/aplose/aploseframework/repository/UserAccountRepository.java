@@ -19,5 +19,5 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
     public UserAccount findByActivationCode(String activationCode);
 
 
-    public UserAccount findByStripeLinkedAccountId(String stripeLinkedAccountId);
+    public UserAccount findByDolibarrThirdPartyId(Long dolibarrThirdPartyId);
 }

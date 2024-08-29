@@ -20,7 +20,7 @@ public class RoleService {
     private void init(){
         Role role = _roleRepository.findByAuthority(RoleEnum.ROLE_SUPER_ADMIN.toString());
         if (role==null){
-            role = new Role(RoleEnum.ROLE_SUPER_ADMIN.toString());
+            role = new Role(RoleEnum.ROLE_SUPER_ADMIN);
             _roleRepository.save(role);
         }
     }
@@ -37,7 +37,7 @@ public class RoleService {
         return this._roleRepository.findByAuthority(authoriry);
     }
     
-    public void create(String roleString){
-        _roleRepository.save(new Role(roleString));
+    public void create(RoleEnum role){
+        _roleRepository.save(new Role(role));
     }
 }

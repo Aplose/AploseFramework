@@ -4,25 +4,18 @@
  */
 package com.aplose.aploseframework.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.aplose.aploseframework.dto.AuthResponseDTO;
 import com.aplose.aploseframework.enums.TokenCategoryEnum;
-import com.aplose.aploseframework.exception.RegistrationException;
-import com.aplose.aploseframework.model.Person;
-import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
-import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.model.security.Token;
-import com.aplose.aploseframework.utils.jwt.JwtTokenUtil;
+import com.aplose.aploseframework.tool.jwt.JwtTokenTool;
 
 import io.jsonwebtoken.Claims;
 
@@ -41,50 +34,9 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private PersonService _personService;
-    @Autowired
-    private JwtTokenUtil _jwtTokenUtil;
-    @Autowired
-    private RoleService _roleService;
-    @Autowired
-    private UserAccountActivationService _accountActivationService;
+    private JwtTokenTool _jwtTokenUtil;
 
 
-
-        public Person register(Person person, Boolean isProfessionnalAccount){
-
-        person.getUserAccount().setPassword(passwordEncoder.encode(person.getUserAccount().getPassword()));
-
-        if(isProfessionnalAccount){
-            person.getUserAccount().setRoles(List.of(this._roleService.getByAuthority(RoleEnum.ROLE_PROFESSIONAL.toString())));
-        }
-
-        this._accountActivationService.setAndSendActivationCode(person.getUserAccount());
-        
-
-        person.setUserAccount(this._userAccountService.save(person.getUserAccount()));
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("sqlfilters", "(t.rowid:like:'" + person.getCivility().getRowid() + "')");
-
-        Civility civility = (Civility) this._dolibarrService.getDictionnary("civilities", map)[0];
-
-        if(civility.getRowid() != person.getCivility().getRowid()){
-            this._userAccountService.delete(person.getUserAccount());
-            throw new RegistrationException("La civilité que vous avez renseigné n'éxiste pas ou n'est pas correcte.");
-        }
-
-        person.setCivility( civility );
-
-        person.getUserAccount().setDolibarrUserId( 
-            this._dolibarrService.createUser(person) 
-        );
-        person = this._personService.save(person);
-
-        return person;
-    }
 
     
     public String dolibarrLogin(String userName, String password) {
@@ -95,6 +47,7 @@ public class AuthenticationService {
         return this._dolibarrService.login(userName, password);
     }
 
+    
 
     public AuthResponseDTO internalLogin(String username, String password){
      

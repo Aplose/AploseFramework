@@ -1,6 +1,11 @@
 package com.aplose.aploseframework.model.dictionnary;
 
+
+
 public class Country  extends AbstractDictionnary{
+
+    public final static String NAME = "countries";
+
     private Long id;
     private Long entity;
     private String code;

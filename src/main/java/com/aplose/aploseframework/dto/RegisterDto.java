@@ -12,10 +12,10 @@ public class RegisterDto {
     private Long id;
 
     @Email(message = "Email is invalid")
-    private String personUserAccountUsername; // email address ti copy in email field
+    private String userAccountUsername; // email address ti copy in email field
 
     @NotNull(message = "Password cannot be null")
-    private String personUserAccountPassword; 
+    private String userAccountPassword; 
 
     @NotNull(message = "Password repeat cannot be null")
     private String passwordRepeat;
@@ -25,73 +25,47 @@ public class RegisterDto {
     private Long personId;
     
     //ajouter un champ pour les pros : CompanyName -> thirdparty->name.
-    private String companyName;
+    private String userAccountCompanyName;
 
     @NotNull(message = "First-name cannot be null")
-    private String personFirstName; // contact and user firstname 
+    private String firstName; // contact and user firstname 
 
     @NotNull(message = "Last-name cannot be null")
-    private String personLastName; // contact and user 
+    private String lastName; // contact and user 
 
-    private String personPhone; //contact and user
+    private String phone; //contact and user
 
     @NotNull(message = "You must provide your civility")
-    private Long personCivilityRowid;
+    private Long civilityRowid;
     
-    private Long personAddressId;
+    private Long addressId;
 
     @NotNull(message = "You must provide your country")
-    private Long personAddressCountryId;
+    private String addressCountryCode;
 
-
-    public Long getId(){ 
-        return this.id;
+    public Long getId() {
+        return id;
     }
 
-    public void setId(Long id){ 
-        this.id = id; 
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getPersonId(){ 
-        return this.personId; 
+    public String getUserAccountUsername() {
+        return userAccountUsername;
     }
 
-    public void setPersonId(Long personId){ 
-        this.personId = personId; 
+    public void setUserAccountUsername(String userAccountUsername) {
+        this.userAccountUsername = userAccountUsername;
     }
 
-    public Long getPersonAddressId(){ 
-        return this.personAddressId; 
+    public String getUserAccountPassword() {
+        return userAccountPassword;
     }
 
-    public void setPersonAddressId(Long personAddressId){ 
-        this.personAddressId = personAddressId; 
+    public void setUserAccountPassword(String userAccountPassword) {
+        this.userAccountPassword = userAccountPassword;
     }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Long getPersonAddressCountryId(){ 
-        return this.personAddressCountryId; 
-    }
-    public void setPersonAddressCountryId(Long personAddressCountryId){ 
-        this.personAddressCountryId = personAddressCountryId; 
-    }
-
-    public Long getPersonCivilityRowid() { 
-        return this.personCivilityRowid; 
-    }
-
-    public void setPersonCivilityRowid( Long personCivilityRowid ) { 
-        this.personCivilityRowid = personCivilityRowid; 
-    }
-
-
 
     public String getPasswordRepeat() {
         return passwordRepeat;
@@ -99,30 +73,6 @@ public class RegisterDto {
 
     public void setPasswordRepeat(String passwordRepeat) {
         this.passwordRepeat = passwordRepeat;
-    }
-    
-    public String getPersonFirstName() {
-        return personFirstName;
-    }
-
-    public void setPersonFirstName(String personFirstName) {
-        this.personFirstName = personFirstName;
-    }
-
-    public String getPersonLastName() {
-        return personLastName;
-    }
-
-    public void setPersonLastName(String personLastName) {
-        this.personLastName = personLastName;
-    }
-
-    public String getPersonPhone() {
-        return personPhone;
-    }
-
-    public void setPersonPhone(String personPhone) {
-        this.personPhone = personPhone;
     }
 
     public Boolean getIsProfessional() {
@@ -133,20 +83,68 @@ public class RegisterDto {
         this.isProfessional = isProfessional;
     }
 
-    public String getPersonUserAccountUsername() {
-        return personUserAccountUsername;
+    public Long getPersonId() {
+        return personId;
     }
 
-    public void setPersonUserAccountUsername(String personUserAccountUsername) {
-        this.personUserAccountUsername = personUserAccountUsername;
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
-    public String getPersonUserAccountPassword() {
-        return personUserAccountPassword;
+    public String getUserAccountCompanyName() {
+        return userAccountCompanyName;
     }
 
-    public void setPersonUserAccountPassword(String personUserAccountPassword) {
-        this.personUserAccountPassword = personUserAccountPassword;
+    public void setUserAccountCompanyName(String userAccountCompanyName) {
+        this.userAccountCompanyName = userAccountCompanyName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Long getCivilityRowid() {
+        return civilityRowid;
+    }
+
+    public void setCivilityRowid(Long civilityRowid) {
+        this.civilityRowid = civilityRowid;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public String getAddressCountryCode() {
+        return addressCountryCode;
+    }
+
+    public void setAddressCountryCode(String addressCountryCode) {
+        this.addressCountryCode = addressCountryCode;
     }
 
         

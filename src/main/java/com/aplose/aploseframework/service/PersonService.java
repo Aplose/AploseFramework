@@ -13,21 +13,36 @@ import org.springframework.data.domain.PageRequest;
 
 @Service
 public class PersonService {
+
     @Autowired
     private PersonRepository _personRepository;
+
 
     public Person findById(Long personId){
         return this._personRepository.findById(personId).orElse(null);
     }
 
+
     public List<Person> getAll(){
         return this._personRepository.findAll();
     }
 
+
     public Person save(Person person){
         return this._personRepository.save(person);
     }
+
+
     public Page<Person> searchProfessional(String query, String countryCode, PageRequest pageRequest){
         return this._personRepository.findProfessionalsByFullNameContainingIgnoreCase(query, countryCode, pageRequest);
+    }
+
+
+    public Person getByUserAccount(UserAccount userAccount){
+        return this._personRepository.findByUserAccount(userAccount);
+    }
+
+    public void delete(Person person){
+        this._personRepository.delete(person);
     }
 }

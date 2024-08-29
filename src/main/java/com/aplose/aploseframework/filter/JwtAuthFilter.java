@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.aplose.aploseframework.service.UserAccountService;
-import com.aplose.aploseframework.utils.jwt.JwtTokenUtil;
+import com.aplose.aploseframework.tool.jwt.JwtTokenTool;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtTokenTool jwtTokenUtil;
     @Autowired
     private UserAccountService _userAccountService;
 
@@ -41,7 +41,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this._userAccountService.loadUserByUsername(username);
+            
+            UserDetails userDetails;
+            try{
+                userDetails = this._userAccountService.loadUserByUsername(username);
+            }
+            catch(Exception e){
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (jwtTokenUtil.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,

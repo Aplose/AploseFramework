@@ -5,16 +5,12 @@ import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.repository.UserAccountRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.EntityNotFoundException;
 
-import java.security.SecureRandom;
-import java.text.DecimalFormat;
-import java.time.Instant;
 import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,17 +28,11 @@ public class UserAccountService implements UserDetailsService{
     private String superAdminDefaultPassword;
     
     @Autowired
-    private EmailService emailService;
-    @Autowired
     private UserAccountRepository _userAccountRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleService _roleService;
-    @Autowired
-    private PersonService _personService;
-    @Autowired
-    private DolibarrService _dolibarrService;
 
     
     @PostConstruct
@@ -72,15 +62,6 @@ public class UserAccountService implements UserDetailsService{
         }
         return userAccount;
     }
-    
-
-    public UserAccount getByStripeLinkedAccountId(String stripeLinkedAccountId){
-        UserAccount userAccount = this._userAccountRepository.findByStripeLinkedAccountId(stripeLinkedAccountId);
-        if(userAccount == null){
-            throw new EntityNotFoundException("No UserAccount found with this Stripe linked account id.");
-        }
-        return userAccount;
-    } 
 
 
     public UserAccount getByActivationCode(String activationCode){

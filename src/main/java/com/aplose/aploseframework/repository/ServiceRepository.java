@@ -4,31 +4,30 @@
  */
 package com.aplose.aploseframework.repository;
 
-import com.aplose.aploseframework.model.Person;
-import com.aplose.aploseframework.model.UserAccount;
+
+import java.time.Duration;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.aplose.aploseframework.model.Service;
 
 /**
  *
  * @author oandrade
  */
-public interface PersonRepository extends JpaRepository<Person, Long>{
-    
-    public Person findByLastName(String lastName);
-    
-    @Query("SELECT p FROM Person p LEFT JOIN p.userAccount ua LEFT JOIN ua.roles r WHERE p.address.country.code=:countryCode AND r.authority='ROLE_PROFESSIONAL' AND LOWER(p.fullName) LIKE LOWER(CONCAT('%', :query, '%'))")
-    public Page<Person> findProfessionalsByFullNameContainingIgnoreCase(
-        @Param("query") String query,
+public interface ServiceRepository extends JpaRepository<Service, Long>{
+
+    @Query("SELECT s FROM Service s WHERE s.professional.address.country.code = :countryCode AND LOWER(s.name) LIKE LOWER(CONCAT('%',:name,'%')) AND s.duration BETWEEN :minDuration AND :maxDuration")
+    public Page<Service> findByNameContainingIgnoreCase(
+        @Param("name") String name, 
         @Param("countryCode") String countryCode,
+        @Param("minDuration") Duration minDuration, 
+        @Param("maxDuration") Duration maxDuration, 
         PageRequest pageRequest
     );
 
-
-    public Person findByUserAccount(UserAccount userAccount);
 }

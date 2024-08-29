@@ -8,20 +8,14 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonFactoryBuilder;
 import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import java.util.List;
 
 import java.util.Locale;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.LocaleResolver;
@@ -57,8 +51,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Primary
     public JsonFactory jsonFactory(){
         StreamReadConstraints constraints = StreamReadConstraints.builder()
-                .maxDocumentLength(Integer.MAX_VALUE)
-                .maxNameLength(Integer.MAX_VALUE)
+                // .maxDocumentLength(Integer.MAX_VALUE)
+                // .maxNameLength(Integer.MAX_VALUE)
                 .maxNestingDepth(Integer.MAX_VALUE)
                 .maxNumberLength(Integer.MAX_VALUE)
             .maxStringLength(Integer.MAX_VALUE)  // Définir une longueur maximale très élevée

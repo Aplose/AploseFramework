@@ -7,23 +7,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author oandrade
  */
 public abstract class DolibarrObject {
-    Integer id;
+    Long id;
     Integer entity;    
     @JsonIgnore
     String endPoint;
     String ref;
     String ref_ext;
-    Integer status;
+    Integer status;        // Utiliser les constantes de DolibarrThirdPartyStatus 
     String module;
     String import_key;
     String label;
     String description;
 
-    public Integer getId() {
+    public DolibarrObject(){}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -37,10 +39,6 @@ public abstract class DolibarrObject {
 
     public String getEndPoint() {
         return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
     }
 
     public String getRef() {

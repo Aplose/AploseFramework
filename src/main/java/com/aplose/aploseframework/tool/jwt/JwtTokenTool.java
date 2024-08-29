@@ -1,4 +1,4 @@
-package com.aplose.aploseframework.utils.jwt;
+package com.aplose.aploseframework.tool.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenUtil {
+public class JwtTokenTool {
 
     @Value("aplose.framework.security.jwt.secretKey")
     private String jwtSecretKey;

@@ -84,7 +84,7 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/accountActivation/*", "PATCH")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
                 auth.requestMatchers(HttpMethod.GET, 
                         "/api/ping",
                         "/api/config/**",
