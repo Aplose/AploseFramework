@@ -76,26 +76,26 @@ public class SecurityConfig {
     @Order(1)
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf -> csrf.disable())
-            .securityMatcher("/api/**")
-            .authorizeHttpRequests(auth -> {
-                auth.requestMatchers(new AntPathRequestMatcher("/api/authentication/**", "POST")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "POST")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "GET")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
-                auth.requestMatchers(HttpMethod.GET, 
-                        "/api/ping",
-                        "/api/config/**",
-                        "/api/dolibarr/**",
-                        "/api/dictionnary/**").permitAll();
-                auth.requestMatchers(HttpMethod.POST,"/api/dolibarr/**").permitAll();
-                auth.anyRequest().authenticated();
-            })
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .httpBasic(Customizer.withDefaults())
-            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+            // .csrf(csrf -> csrf.disable())
+            // .securityMatcher("/api/**")
+            // .authorizeHttpRequests(auth -> {
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/authentication/**", "POST")).permitAll();
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "POST")).permitAll();
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "GET")).permitAll();
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
+            //     auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
+            //     auth.requestMatchers(HttpMethod.GET, 
+            //             "/api/ping",
+            //             "/api/config/**",
+            //             "/api/dolibarr/**",
+            //             "/api/dictionnary/**").permitAll();
+            //     auth.requestMatchers(HttpMethod.POST,"/api/dolibarr/**").permitAll();
+            //     auth.anyRequest().authenticated();
+            // })
+            // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // .httpBasic(Customizer.withDefaults())
+            // .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
             .build();
     }
     @Bean
