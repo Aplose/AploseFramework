@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.service.ConfigService;
 import com.aplose.aploseframework.service.UserAccountService;
 import com.aplose.aploseframework.service.stripe.StripeAccountService;
 import com.stripe.Stripe;
@@ -28,33 +29,31 @@ import jakarta.annotation.PostConstruct;
 @RequestMapping("/api/webhook/stripe/account")
 public class StripeAccountWebhookController {
 
-    @Value("${stripe.webhook.secret}")
-    private String STRIPE_WEBHOOK_SECRET;
-    @Value("${stripe.api.key}")
-    private String _stripeApiKey;
+    private String stripeWebHookSecret;
 
     @Autowired
     private UserAccountService _userAccountService;
     @Autowired
     private StripeAccountService _stripeAccountService;
+    @Autowired
+    private ConfigService configService;
 
 
     @PostConstruct
     public void init(){
-        Stripe.apiKey = _stripeApiKey;
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
 
 
     @PostMapping()
     public ResponseEntity<String> handleStripeAccount(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event = null;
-
         try {
-            event = Webhook.constructEvent(payload, sigHeader, "whsec_f2bbdad3f5659e18b96eacd529b2e8b56a89a45f0202ecf063b1db70582249f8");
-            
+            event = Webhook.constructEvent(payload, sigHeader, "whsec_f2bbdad3f5659e18b96eacd529b2e8b56a89a45f0202ecf063b1db70582249f8");            
         } catch (Exception e) {
             System.out.println("\n\n Webhook ERROR:");
-            System.err.println("webhook signature" +STRIPE_WEBHOOK_SECRET);
+            System.err.println("webhook signature" +stripeWebHookSecret);
             System.err.println("sig header: " + sigHeader);
             return ResponseEntity.badRequest().body("Webhook error: " + e.getMessage());
         }

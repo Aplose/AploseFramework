@@ -30,6 +30,14 @@ public class ConfigService {
     String dolibarrApiUrl;
     @Value("${dolibarr.user.api.key}")
     String dolibarrUserApiKey;
+    @Value("${app.root.url}")
+    String appRootUrl;
+    @Value("${stripe.webhook.secret}")
+    String stripeWebHookSecret;
+    @Value("${stripe.api.key}")
+    String stripeApiKey;
+    
+
     
     private Map<String,Config> configurations = new HashMap<>();
     
@@ -40,6 +48,26 @@ public class ConfigService {
         //on va voir si les config existent sinon on les crée à la volée...
         Optional<Config> configOptional;
         Config config=null;
+        //stripe
+        configOptional = configRepository.findById("stripe.api.key");
+        if(configOptional.isEmpty()){
+            config = new Config("stripe.api.key", stripeApiKey);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
+        //stripe
+        configOptional = configRepository.findById("stripe.webhook.secret");
+        if(configOptional.isEmpty()){
+            config = new Config("stripe.webhook.secret", stripeWebHookSecret);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
         //dolibarr.api.url utilisé pour accéder à Dolibarr
         //on utilise le dolibarr serenitydate par défaut
         configOptional = configRepository.findById("dolibarr.api.url");
@@ -56,6 +84,16 @@ public class ConfigService {
         configOptional = configRepository.findById("dolibarr.user.api.key");
         if(configOptional.isEmpty()){
             config = new Config("dolibarr.user.api.key", dolibarrUserApiKey);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
+        //appRootUrl utilisé pour les liens stripe
+        configOptional = configRepository.findById("app.root.url");
+        if(configOptional.isEmpty()){
+            config = new Config("app.root.url", appRootUrl);
             configRepository.save(config);
             allKeys.remove(config.getConfigKey());
             configurations.put(config.getConfigKey(), config);

@@ -87,6 +87,7 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
                 auth.requestMatchers(HttpMethod.GET, 
                         "/api/ping",
+                        "/api/translation/**",
                         "/api/config/**",
                         "/api/dolibarr/**",
                         "/api/dictionnary/**").permitAll();

@@ -10,6 +10,7 @@ import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dolibarr.ThirdParty;
+import com.aplose.aploseframework.service.ConfigService;
 import com.aplose.aploseframework.service.DolibarrService;
 import com.aplose.aploseframework.service.EmailService;
 import com.stripe.exception.StripeException;
@@ -21,13 +22,14 @@ import com.stripe.param.AccountLinkCreateParams;
 @Service
 public class StripeAccountService {
 
-    @Value("${serenitydateapp.root.url}")
-    private String _clientUrl;
+//    private String _clientUrl;
 
     @Autowired
     private DolibarrService _dolibarrService;
     @Autowired
     private EmailService _emailService;
+    @Autowired
+    private ConfigService configService;
 
 
 
@@ -112,7 +114,7 @@ public class StripeAccountService {
         try{
             AccountLinkCreateParams params = AccountLinkCreateParams.builder()
                 .setAccount(accountId)
-                .setRefreshUrl(this._clientUrl + "/refresh-accout-link")
+                .setRefreshUrl(this.configService.getStringConfig("app.root.url") + "/refresh-accout-link")
                 .setReturnUrl("https://google.com")
                 .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
                 .build();

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aplose.aploseframework.ZDEVELOP.devController;
 import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.service.ConfigService;
 import com.aplose.aploseframework.service.UserAccountService;
 import com.aplose.aploseframework.service.stripe.StripeAccountService;
 import com.stripe.Stripe;
@@ -25,21 +26,21 @@ import jakarta.annotation.PostConstruct;
 @RequestMapping("/api/webhook/stripe/capability")
 public class StripeCapabilityWebhookController {
     
-    @Value("${stripe.webhook.secret}")
-    private String STRIPE_WEBHOOK_SECRET;
-    @Value("${stripe.api.key}")
-    private String _stripeApiKey;
+    private String stripeWebHookSecret;
 
     @Autowired
     private StripeAccountService _stripeAccountService;
     @Autowired
     private UserAccountService _userAccountService;
+    @Autowired
+    private ConfigService configService;
 
 
 
     @PostConstruct
     public void init(){
-        Stripe.apiKey = _stripeApiKey;
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
 
 
@@ -52,7 +53,7 @@ public class StripeCapabilityWebhookController {
             
         } catch (Exception e) {
             System.out.println("\n\n Webhook ERROR:");
-            System.err.println("webhook signature" +STRIPE_WEBHOOK_SECRET);
+            System.err.println("webhook signature " +stripeWebHookSecret);
             System.err.println("sig header: " + sigHeader);
             return "Webhook capability error: " + e.getMessage();
         }

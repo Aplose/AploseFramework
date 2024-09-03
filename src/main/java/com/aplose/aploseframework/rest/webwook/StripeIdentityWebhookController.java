@@ -1,5 +1,6 @@
 package com.aplose.aploseframework.rest.webwook;
 
+import com.aplose.aploseframework.service.ConfigService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
@@ -20,15 +22,16 @@ import jakarta.annotation.PostConstruct;
 @CrossOrigin
 public class StripeIdentityWebhookController {
 
-    @Value("${stripe.webhook.secret}")
-    private String STRIPE_WEBHOOK_SECRET;
-    @Value("${stripe.api.key}")
-    private String _stripeApiKey;
+    @Autowired
+    private ConfigService configService;
+    
+    private String stripeWebHookSecret;
 
 
     @PostConstruct
     public void init(){
-        Stripe.apiKey = _stripeApiKey;
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
 
 
@@ -39,11 +42,11 @@ public class StripeIdentityWebhookController {
         Event event = null;
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, STRIPE_WEBHOOK_SECRET);
+            event = Webhook.constructEvent(payload, sigHeader, stripeWebHookSecret);
             
         } catch (Exception e) {
             System.out.println("\n\n Webhook ERROR:");
-            System.err.println("webhook signature" +STRIPE_WEBHOOK_SECRET);
+            System.err.println("webhook signature" +stripeWebHookSecret);
             System.err.println("sig header: " + sigHeader);
             return "Webhook error: " + e.getMessage();
         }
