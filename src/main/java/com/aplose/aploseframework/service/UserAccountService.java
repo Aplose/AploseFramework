@@ -24,15 +24,17 @@ import org.springframework.stereotype.Service;
 public class UserAccountService implements UserDetailsService{
 
 
-    @Value("${aplose.framework.superAdmin.defaultPassword}")
-    private String superAdminDefaultPassword;
-    
-    @Autowired
+    private ConfigService _configService;
     private UserAccountRepository _userAccountRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
+    private PasswordEncoder _passwordEncoder;
     private RoleService _roleService;
+
+    UserAccountService(ConfigService configService, UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder, RoleService roleService){
+        this._configService = configService;
+        this._userAccountRepository = userAccountRepository;
+        this._passwordEncoder = passwordEncoder;
+        this._roleService = roleService;
+    }
 
     
     @PostConstruct
@@ -43,7 +45,7 @@ public class UserAccountService implements UserDetailsService{
             superAdmin = new UserAccount();
             superAdmin.setCreationDate(LocalDate.now());
             superAdmin.setEnabled(Boolean.TRUE);
-            superAdmin.setPassword(passwordEncoder.encode(superAdminDefaultPassword));
+            superAdmin.setPassword(_passwordEncoder.encode(this._configService.getStringConfig("aplose.framework.superAdmin.defaultPassword")));
             superAdmin.setLocked(Boolean.FALSE);
             superAdmin.setUsername("SuperAdmin");
             Role superAdminRole = _roleService.getByAuthority(RoleEnum.ROLE_SUPER_ADMIN.toString());

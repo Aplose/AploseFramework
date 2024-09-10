@@ -32,31 +32,42 @@ import com.aplose.aploseframework.tool.dolibarr.DolibarrTool;
 @Service
 public class RegisterService {
 
-    @Value("${spring.user-account.second-to-activate-account}")
-    private Long secondToActivateAccount;
-
-    @Autowired
+    private ConfigService _configService;
     private DolibarrService _dolibarrService;
-    @Autowired
     private UserAccountService _userAccountService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
+    private PasswordEncoder _passwordEncoder;
     private PersonService _personService;
-    @Autowired
     private RoleService _roleService;
-    @Autowired
     private EmailService _emailService;
-    @Autowired
     private StripeAccountService _stripeAccountService;
-    @Autowired
     private StripeCustomerService _stripeCustomerService;
 
+    RegisterService(
+        ConfigService configService,
+        DolibarrService dolibarrService,
+        UserAccountService userAccountService,
+        PasswordEncoder passwordEncoder,
+        PersonService personService,
+        RoleService roleService,
+        EmailService emailService,
+        StripeAccountService stripeAccountService,
+        StripeCustomerService stripeCustomerService
+    ){
+        this._configService = configService;
+        this._dolibarrService = dolibarrService;
+        this._userAccountService = userAccountService;
+        this._passwordEncoder = passwordEncoder;
+        this._personService = personService;
+        this._roleService = roleService;
+        this._emailService = emailService;
+        this._stripeAccountService = stripeAccountService;
+        this._stripeCustomerService = stripeCustomerService;
+    }
 
     
     public Person register(AuthenticationTypeEnum authenticationType, Person person, Boolean isProfessionnalAccount){
 
-        person.getUserAccount().setPassword(passwordEncoder.encode(person.getUserAccount().getPassword()));
+        person.getUserAccount().setPassword(_passwordEncoder.encode(person.getUserAccount().getPassword()));
 
         if(isProfessionnalAccount){
             List<Role> roles = new ArrayList<>();
@@ -143,7 +154,7 @@ public class RegisterService {
 
 
     public Boolean activationCodeIsExpired(UserAccount userAccount){
-        return userAccount.getActivationCodeInstant().plusSeconds(secondToActivateAccount).isBefore(Instant.now()) ?
+        return userAccount.getActivationCodeInstant().plusSeconds(this._configService.getIntegerConfig("spring.user-account.second-to-activate-account")).isBefore(Instant.now()) ?
             true 
             : 
             false;

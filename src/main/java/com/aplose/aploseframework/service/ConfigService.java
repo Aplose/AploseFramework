@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 public class ConfigService {
     @Autowired
     private ConfigRepository configRepository;
+
+    @Value("${spring.user-account.second-to-activate-account}")
+    private Long secondToActivateAccount;
     @Value("${dolibarr.api.url}")
     private String dolibarrApiUrl;
     @Value("${dolibarr.user.api.key}")
@@ -34,9 +37,10 @@ public class ConfigService {
     String stripeWebHookSecret;
     @Value("${stripe.api.key}")
     String stripeApiKey;
-    
-
-
+    @Value("${aplose.framework.security.jwt.secretKey}")
+    private String jwtSecretKey;
+    @Value("${aplose.framework.superAdmin.defaultPassword}")
+    private String superAdminDefaultPassword;
     @Value("${google.client.id}")
     private String googleClientId;
     
@@ -49,6 +53,37 @@ public class ConfigService {
         //on va voir si les config existent sinon on les crée à la volée...
         Optional<Config> configOptional;
         Config config=null;
+
+        // temps de validité, en seconde, du code d'activation de compte lors d'un enregistrement d'un utilisateur 
+        configOptional = configRepository.findById("spring.user-account.second-to-activate-account");
+        if(configOptional.isEmpty()){
+            config = new Config("spring.user-account.second-to-activate-account", secondToActivateAccount);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
+        // mot de passe par defaut du super admin
+        configOptional = configRepository.findById("aplose.framework.superAdmin.defaultPassword");
+        if(configOptional.isEmpty()){
+            config = new Config("aplose.framework.superAdmin.defaultPassword", superAdminDefaultPassword);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
+        // phrase secrete pour le Json Web Token d'authentification
+        configOptional = configRepository.findById("aplose.framework.security.jwt.secretKey");
+        if(configOptional.isEmpty()){
+            config = new Config("aplose.framework.security.jwt.secretKey", jwtSecretKey);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
         //stripe
         configOptional = configRepository.findById("stripe.api.key");
         if(configOptional.isEmpty()){
