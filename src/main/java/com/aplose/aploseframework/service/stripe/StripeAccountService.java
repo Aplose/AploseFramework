@@ -3,10 +3,8 @@ package com.aplose.aploseframework.service.stripe;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dolibarr.ThirdParty;
@@ -29,7 +27,7 @@ public class StripeAccountService {
     @Autowired
     private EmailService _emailService;
     @Autowired
-    private ConfigService configService;
+    private ConfigService _configService;
 
 
 
@@ -68,12 +66,9 @@ public class StripeAccountService {
                 .setEmail(person.getUserAccount().getUsername())
                 .build()
             );
-    
-            developHelper.printObject(account, null);
-    
-            // checkAccountInformations(account.getId());
-            // checkCapabilities(account.getId());
-    
+
+            //NOTE si un bug de parsing de la réponse de Dolibarr se produit ici, il peux s'agir des attributs supplémentaire de ThirdParty, on-t-ils étaient 
+            // ajoutés dans les réglages du module Dolibarr 'ThirdParty' (ou 'Tiers') ?
             this._dolibarrService.update(ThirdParty.NAME, thirdParty.getId(), thirdParty);
         }
         catch(StripeException e){
@@ -114,7 +109,7 @@ public class StripeAccountService {
         try{
             AccountLinkCreateParams params = AccountLinkCreateParams.builder()
                 .setAccount(accountId)
-                .setRefreshUrl(this.configService.getStringConfig("app.root.url") + "/refresh-accout-link")
+                .setRefreshUrl(this._configService.getStringConfig("app.root.url") + "/refresh-accout-link")
                 .setReturnUrl("https://google.com")
                 .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
                 .build();

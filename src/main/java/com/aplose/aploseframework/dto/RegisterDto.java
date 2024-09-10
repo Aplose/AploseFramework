@@ -1,5 +1,7 @@
 package com.aplose.aploseframework.dto;
 
+import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -42,6 +44,12 @@ public class RegisterDto {
 
     @NotNull(message = "You must provide your country")
     private String addressCountryCode;
+
+    @NotNull(message = "You must provide an AuthenticationTypeEnum")
+    private AuthenticationTypeEnum authenticationType;
+
+
+
 
     public Long getId() {
         return id;
@@ -145,6 +153,14 @@ public class RegisterDto {
 
     public void setAddressCountryCode(String addressCountryCode) {
         this.addressCountryCode = addressCountryCode;
+    }
+
+    public AuthenticationTypeEnum getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationTypeEnum authenticationType) {
+        this.authenticationType = authenticationType;
     }
 
         

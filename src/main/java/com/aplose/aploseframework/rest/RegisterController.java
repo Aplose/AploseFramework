@@ -5,15 +5,21 @@
 package com.aplose.aploseframework.rest;
 
 import com.aplose.aploseframework.dto.RegisterDto;
+import com.aplose.aploseframework.dto.google.GoogleAuthResultDto;
 import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Person;
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.service.GoogleIdentityService;
 import com.aplose.aploseframework.service.RegisterService;
 import com.aplose.aploseframework.service.UserAccountService;
 import jakarta.validation.Valid;
+
+import java.util.Map;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,6 +44,8 @@ public class RegisterController {
     private UserAccountService _userAccountService;
     @Autowired
     private RegisterService _registerService;
+    @Autowired
+    private GoogleIdentityService _googleService;
 
     
     /**
@@ -55,6 +63,7 @@ public class RegisterController {
 
         return  ResponseEntity.ok(
             this._registerService.register(
+                registerDto.getAuthenticationType(),
                 this._modelMapper.map(registerDto, Person.class),
                 registerDto.getIsProfessional()
             )
@@ -80,4 +89,17 @@ public class RegisterController {
         this._registerService.activateAccount(userAccount);
         return ResponseEntity.ok().body("Activation successfull !");
     }    
+
+
+    @PostMapping("/google-extract-claims")
+    public ResponseEntity<GoogleAuthResultDto> googleExtractClaims(@RequestBody String googleToken){
+        GoogleAuthResultDto claims;
+        try{
+            claims = this._googleService.getUserClaimsFromGoogleToken(googleToken);
+        }catch(Exception e){
+            System.out.println("\n\n\n" + e.getMessage() + "\n\n");
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        return ResponseEntity.ok(claims);
+    }
 }

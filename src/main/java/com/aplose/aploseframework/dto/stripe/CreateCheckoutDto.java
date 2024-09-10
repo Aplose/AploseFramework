@@ -1,6 +1,5 @@
 package com.aplose.aploseframework.dto.stripe;
 
-import com.stripe.model.PaymentMethod;
 
 public class CreateCheckoutDto {
 

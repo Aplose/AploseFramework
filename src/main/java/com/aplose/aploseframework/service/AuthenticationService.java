@@ -11,13 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
-import com.aplose.aploseframework.enums.TokenCategoryEnum;
+import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.security.Token;
 import com.aplose.aploseframework.tool.jwt.JwtTokenTool;
+import com.google.api.client.json.webtoken.JsonWebSignature;
+import com.google.auth.oauth2.TokenVerifier.VerificationException;
 
 import io.jsonwebtoken.Claims;
+import jakarta.persistence.EntityNotFoundException;
 
 
 /**
@@ -28,6 +32,9 @@ import io.jsonwebtoken.Claims;
 public class AuthenticationService {
 
     @Autowired
+    private ConfigService _configService;
+
+    @Autowired
     private DolibarrService _dolibarrService;
     @Autowired
     private UserAccountService _userAccountService;
@@ -35,6 +42,9 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenTool _jwtTokenUtil;
+    @Autowired
+    private GoogleIdentityService _googleService;
+
 
 
 
@@ -63,10 +73,11 @@ public class AuthenticationService {
         return new AuthResponseDTO(
             new Token(
                 token, 
-                TokenCategoryEnum.INTERNAL, 
+                AuthenticationTypeEnum.INTERNAL, 
                 this._jwtTokenUtil.extractClaim(token, Claims::getExpiration)
             ),
             userDetails
         );
     }
+
 }

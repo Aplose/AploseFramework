@@ -1,6 +1,6 @@
 package com.aplose.aploseframework.enums;
 
-public enum TokenCategoryEnum {
+public enum AuthenticationTypeEnum {
     INTERNAL,
     DOLIBARR,
     GOOGLE,

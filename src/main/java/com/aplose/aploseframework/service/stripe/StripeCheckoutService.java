@@ -1,7 +1,6 @@
 package com.aplose.aploseframework.service.stripe;
 
 
-import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +12,6 @@ import com.aplose.aploseframework.service.DolibarrService;
 import com.aplose.aploseframework.service.PersonService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
-import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentIntentCreateParams;
 
 @org.springframework.stereotype.Service

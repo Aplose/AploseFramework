@@ -7,15 +7,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.Instant;
-
+import java.util.ArrayList;
 
 import com.aplose.aploseframework.model.UserAccount;
+import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Person;
+import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.model.dictionnary.Country;
@@ -51,24 +54,32 @@ public class RegisterService {
 
 
     
-    public Person register(Person person, Boolean isProfessionnalAccount){
+    public Person register(AuthenticationTypeEnum authenticationType, Person person, Boolean isProfessionnalAccount){
 
         person.getUserAccount().setPassword(passwordEncoder.encode(person.getUserAccount().getPassword()));
 
         if(isProfessionnalAccount){
-            person.getUserAccount().setRoles(List.of(this._roleService.getByAuthority(RoleEnum.ROLE_PROFESSIONAL.toString())));
+            List<Role> roles = new ArrayList<>();
+            roles.add(this._roleService.getByAuthority(RoleEnum.ROLE_PROFESSIONAL.toString()));
+            person.getUserAccount().setRoles(roles);
         }
 
-        this.setAndSendActivationCode(person.getUserAccount());
+        if(authenticationType == AuthenticationTypeEnum.INTERNAL){
+            this.setAndSendActivationCode(person.getUserAccount());
+        }
 
         this.retrieveAndSetCivility(person);
         this.retrieveAndSetCountry(person);
 
-        person.getUserAccount().setLocale(java.util.Locale.getDefault());  //TODO mettre une Locale dynamiquement
-        
+        person.getUserAccount().setLocale(new Locale(person.getAddress().getCountry().getCode()));
+
         person.setUserAccount(this._userAccountService.save(person.getUserAccount()));
 
         person = this._personService.save(person);
+
+        if(authenticationType == AuthenticationTypeEnum.GOOGLE){
+            this.activateAccount(person.getUserAccount());
+        }
 
         return person;
     }

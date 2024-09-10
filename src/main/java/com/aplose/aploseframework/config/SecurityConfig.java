@@ -80,8 +80,9 @@ public class SecurityConfig {
             .securityMatcher("/api/**")
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/authentication/**", "POST")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/google-extract-claims", "POST")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/google-register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "POST")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/webhook/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();

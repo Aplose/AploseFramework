@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.aplose.aploseframework.model.dolibarr;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import com.aplose.aploseframework.constantes.dolibarr.DolibarrThirdPartyClientTypes;

@@ -6,11 +6,15 @@ package com.aplose.aploseframework.rest;
 
 import com.aplose.aploseframework.dto.AuthRequestDTO;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
-import com.aplose.aploseframework.enums.TokenCategoryEnum;
+import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.security.Token;
 import com.aplose.aploseframework.service.AuthenticationService;
+import com.aplose.aploseframework.service.GoogleIdentityService;
+import com.google.auth.oauth2.TokenVerifier;
+import com.google.auth.oauth2.TokenVerifier.VerificationException;
 
+import org.eclipse.jetty.io.QuietException.Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,18 +31,20 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api/authentication")
 public class AuthenticationController {
+
     @Autowired
     private AuthenticationService authenticationService;
-
+    @Autowired
+    private GoogleIdentityService _googleIdentityService;
 
 
     
-    @PostMapping("/login")
+    @PostMapping("/dolibarr-login")
     public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO){
         return new AuthResponseDTO(
             new Token(
                 authenticationService.dolibarrLogin(authRequestDTO.getUsername(),authRequestDTO.getPassword()), 
-                TokenCategoryEnum.DOLIBARR, 
+                AuthenticationTypeEnum.DOLIBARR, 
                 null
             ),
             new UserAccount()
@@ -55,5 +61,11 @@ public class AuthenticationController {
                 loginRequest.getPassword()
             )
         );
+    }
+
+
+    @PostMapping("/google-login")
+    public ResponseEntity<AuthResponseDTO> googleLogin(@RequestBody String googleToken) throws VerificationException{
+        return ResponseEntity.ok(this._googleIdentityService.googleLogin(googleToken));
     }
 }

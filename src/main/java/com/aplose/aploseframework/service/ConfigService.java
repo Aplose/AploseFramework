@@ -5,7 +5,6 @@
 package com.aplose.aploseframework.service;
 
 import com.aplose.aploseframework.model.Config;
-import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.repository.ConfigRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.Instant;
@@ -15,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,9 +23,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConfigService {
     @Autowired
-    ConfigRepository configRepository;
+    private ConfigRepository configRepository;
     @Value("${dolibarr.api.url}")
-    String dolibarrApiUrl;
+    private String dolibarrApiUrl;
     @Value("${dolibarr.user.api.key}")
     String dolibarrUserApiKey;
     @Value("${app.root.url}")
@@ -38,6 +36,9 @@ public class ConfigService {
     String stripeApiKey;
     
 
+
+    @Value("${google.client.id}")
+    private String googleClientId;
     
     private Map<String,Config> configurations = new HashMap<>();
     
@@ -62,6 +63,10 @@ public class ConfigService {
         configOptional = configRepository.findById("stripe.webhook.secret");
         if(configOptional.isEmpty()){
             config = new Config("stripe.webhook.secret", stripeWebHookSecret);
+        //google.client.id utilisé pour l'authentification grâce à Google
+        configOptional = configRepository.findById("google.client.id");
+        if(configOptional.isEmpty()){
+            config = new Config("google.client.id", googleClientId);
             configRepository.save(config);
             allKeys.remove(config.getConfigKey());
             configurations.put(config.getConfigKey(), config);
@@ -120,9 +125,9 @@ public class ConfigService {
         }else{
             allKeys.remove(configOptional.get().getConfigKey());
         }
-/*        for(String keyToDelete:allKeys){
-            configRepository.deleteById(keyToDelete);
-        }*/
+        // for(String keyToDelete:allKeys){
+        //     configRepository.deleteById(keyToDelete);
+        }
     }
 
     public String getStringConfig(String key){

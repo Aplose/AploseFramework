@@ -2,16 +2,16 @@ package com.aplose.aploseframework.model.security;
 
 import java.util.Date;
 
-import com.aplose.aploseframework.enums.TokenCategoryEnum;
+import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 
 public class Token {
     
     private String accessToken;
-    private TokenCategoryEnum type;
+    private AuthenticationTypeEnum type;
     private Date expireAt;
 
 
-    public Token(String accessToken, TokenCategoryEnum type, Date expireAt){
+    public Token(String accessToken, AuthenticationTypeEnum type, Date expireAt){
         this.accessToken = accessToken;
         this.type = type;
         this.expireAt = expireAt;
@@ -28,12 +28,12 @@ public class Token {
     }
 
 
-    public TokenCategoryEnum getType() {
+    public AuthenticationTypeEnum getType() {
         return type;
     }
 
 
-    public void setType(TokenCategoryEnum type) {
+    public void setType(AuthenticationTypeEnum type) {
         this.type = type;
     }
 
