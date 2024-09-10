@@ -10,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,18 +22,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserAccountService implements UserDetailsService{
 
-
+    @Autowired
     private ConfigService _configService;
+    @Autowired
     private UserAccountRepository _userAccountRepository;
+    @Autowired
     private PasswordEncoder _passwordEncoder;
+    @Autowired
     private RoleService _roleService;
 
-    UserAccountService(ConfigService configService, UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder, RoleService roleService){
-        this._configService = configService;
-        this._userAccountRepository = userAccountRepository;
-        this._passwordEncoder = passwordEncoder;
-        this._roleService = roleService;
-    }
 
     
     @PostConstruct

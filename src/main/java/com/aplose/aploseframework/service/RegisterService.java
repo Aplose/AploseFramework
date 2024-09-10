@@ -1,7 +1,6 @@
 package com.aplose.aploseframework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,37 +31,25 @@ import com.aplose.aploseframework.tool.dolibarr.DolibarrTool;
 @Service
 public class RegisterService {
 
+    @Autowired
     private ConfigService _configService;
+    @Autowired
     private DolibarrService _dolibarrService;
+    @Autowired
     private UserAccountService _userAccountService;
+    @Autowired
     private PasswordEncoder _passwordEncoder;
+    @Autowired
     private PersonService _personService;
+    @Autowired
     private RoleService _roleService;
+    @Autowired
     private EmailService _emailService;
+    @Autowired
     private StripeAccountService _stripeAccountService;
+    @Autowired
     private StripeCustomerService _stripeCustomerService;
 
-    RegisterService(
-        ConfigService configService,
-        DolibarrService dolibarrService,
-        UserAccountService userAccountService,
-        PasswordEncoder passwordEncoder,
-        PersonService personService,
-        RoleService roleService,
-        EmailService emailService,
-        StripeAccountService stripeAccountService,
-        StripeCustomerService stripeCustomerService
-    ){
-        this._configService = configService;
-        this._dolibarrService = dolibarrService;
-        this._userAccountService = userAccountService;
-        this._passwordEncoder = passwordEncoder;
-        this._personService = personService;
-        this._roleService = roleService;
-        this._emailService = emailService;
-        this._stripeAccountService = stripeAccountService;
-        this._stripeCustomerService = stripeCustomerService;
-    }
 
     
     public Person register(AuthenticationTypeEnum authenticationType, Person person, Boolean isProfessionnalAccount){
@@ -154,7 +141,7 @@ public class RegisterService {
 
 
     public Boolean activationCodeIsExpired(UserAccount userAccount){
-        return userAccount.getActivationCodeInstant().plusSeconds(this._configService.getIntegerConfig("spring.user-account.second-to-activate-account")).isBefore(Instant.now()) ?
+        return userAccount.getActivationCodeInstant().plusSeconds(this._configService.getLongConfig("spring.user-account.second-to-activate-account")).isBefore(Instant.now()) ?
             true 
             : 
             false;

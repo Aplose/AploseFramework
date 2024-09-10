@@ -30,13 +30,13 @@ public class ConfigService {
     @Value("${dolibarr.api.url}")
     private String dolibarrApiUrl;
     @Value("${dolibarr.user.api.key}")
-    String dolibarrUserApiKey;
+    private String dolibarrUserApiKey;
     @Value("${app.root.url}")
-    String appRootUrl;
+    private String appRootUrl;
     @Value("${stripe.webhook.secret}")
-    String stripeWebHookSecret;
+    private String stripeWebHookSecret;
     @Value("${stripe.api.key}")
-    String stripeApiKey;
+    private String stripeApiKey;
     @Value("${aplose.framework.security.jwt.secretKey}")
     private String jwtSecretKey;
     @Value("${aplose.framework.superAdmin.defaultPassword}")
@@ -84,7 +84,7 @@ public class ConfigService {
         }else{
             allKeys.remove(configOptional.get().getConfigKey());
         }
-        //stripe
+        //stripe api key
         configOptional = configRepository.findById("stripe.api.key");
         if(configOptional.isEmpty()){
             config = new Config("stripe.api.key", stripeApiKey);
@@ -94,10 +94,19 @@ public class ConfigService {
         }else{
             allKeys.remove(configOptional.get().getConfigKey());
         }
-        //stripe
+
+        //stripe webhook secret
         configOptional = configRepository.findById("stripe.webhook.secret");
+        System.err.println("ok");
         if(configOptional.isEmpty()){
             config = new Config("stripe.webhook.secret", stripeWebHookSecret);
+            configRepository.save(config);
+            allKeys.remove(config.getConfigKey());
+            configurations.put(config.getConfigKey(), config);
+        }else{
+            allKeys.remove(configOptional.get().getConfigKey());
+        }
+
         //google.client.id utilisé pour l'authentification grâce à Google
         configOptional = configRepository.findById("google.client.id");
         if(configOptional.isEmpty()){
@@ -162,7 +171,7 @@ public class ConfigService {
         }
         // for(String keyToDelete:allKeys){
         //     configRepository.deleteById(keyToDelete);
-        }
+        // }
     }
 
     public String getStringConfig(String key){
@@ -194,7 +203,7 @@ public class ConfigService {
         }
         return config;
     }
-//    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    //    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void createOrUpdate(Config config){
         configRepository.save(config);
         configurations.put(config.getConfigKey(), config);

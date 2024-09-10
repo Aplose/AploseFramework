@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
 import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
@@ -30,9 +29,6 @@ import jakarta.persistence.EntityNotFoundException;
  */
 @Service
 public class AuthenticationService {
-
-    @Autowired
-    private ConfigService _configService;
 
     @Autowired
     private DolibarrService _dolibarrService;
@@ -78,6 +74,24 @@ public class AuthenticationService {
             ),
             userDetails
         );
+    }
+
+
+
+    public AuthResponseDTO googleLogin(String token) throws VerificationException{
+
+        JsonWebSignature.Payload payload = this._googleService.getPayload(token);
+        UserAccount userAccount;
+
+        try{
+            userAccount = this._userAccountService.loadUserByUsername((String) payload.get("email"));
+        }
+        catch(EntityNotFoundException e){
+            System.err.println("Error at AuthenticationService.googleLogin(): " + e.getMessage());
+            throw new VerificationException("UserAccount with username" + payload.get("email") + " not exist");
+        }
+
+        return this.internalLogin(userAccount.getUsername(), payload.getSubject());
     }
 
 }

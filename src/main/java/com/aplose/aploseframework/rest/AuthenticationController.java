@@ -10,11 +10,8 @@ import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.security.Token;
 import com.aplose.aploseframework.service.AuthenticationService;
-import com.aplose.aploseframework.service.GoogleIdentityService;
-import com.google.auth.oauth2.TokenVerifier;
 import com.google.auth.oauth2.TokenVerifier.VerificationException;
 
-import org.eclipse.jetty.io.QuietException.Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,9 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationService authenticationService;
-    @Autowired
-    private GoogleIdentityService _googleIdentityService;
+    private AuthenticationService _authenticationService;
 
 
     
@@ -43,7 +38,7 @@ public class AuthenticationController {
     public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO){
         return new AuthResponseDTO(
             new Token(
-                authenticationService.dolibarrLogin(authRequestDTO.getUsername(),authRequestDTO.getPassword()), 
+                _authenticationService.dolibarrLogin(authRequestDTO.getUsername(),authRequestDTO.getPassword()), 
                 AuthenticationTypeEnum.DOLIBARR, 
                 null
             ),
@@ -56,7 +51,7 @@ public class AuthenticationController {
     @PostMapping("/internal-login")
     public ResponseEntity<AuthResponseDTO> internalLogin(@RequestBody AuthRequestDTO loginRequest) {
         return ResponseEntity.ok(
-            this.authenticationService.internalLogin(
+            this._authenticationService.internalLogin(
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
             )
@@ -66,6 +61,6 @@ public class AuthenticationController {
 
     @PostMapping("/google-login")
     public ResponseEntity<AuthResponseDTO> googleLogin(@RequestBody String googleToken) throws VerificationException{
-        return ResponseEntity.ok(this._googleIdentityService.googleLogin(googleToken));
+        return ResponseEntity.ok(this._authenticationService.googleLogin(googleToken));
     }
 }
