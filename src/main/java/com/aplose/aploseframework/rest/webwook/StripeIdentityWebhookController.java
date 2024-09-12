@@ -43,11 +43,7 @@ public class StripeIdentityWebhookController {
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);
-            
         } catch (Exception e) {
-            System.out.println("\n\n Webhook ERROR:");
-            System.err.println("webhook signature" +stripeWebHookSecret);
-            System.err.println("sig header: " + sigHeader);
             return "Webhook error: " + e.getMessage();
         }
 

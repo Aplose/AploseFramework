@@ -52,9 +52,6 @@ public class StripeAccountWebhookController {
         try {
             event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);            
         } catch (Exception e) {
-            System.out.println("\n\n Webhook ERROR:");
-            System.err.println("webhook signature" +stripeWebHookSecret);
-            System.err.println("sig header: " + sigHeader);
             return ResponseEntity.badRequest().body("Webhook error: " + e.getMessage());
         }
 
