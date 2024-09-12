@@ -42,7 +42,7 @@ public class StripeIdentityWebhookController {
         Event event = null;
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, stripeWebHookSecret);
+            event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);
             
         } catch (Exception e) {
             System.out.println("\n\n Webhook ERROR:");

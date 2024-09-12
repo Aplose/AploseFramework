@@ -9,11 +9,9 @@ import com.aplose.aploseframework.repository.ConfigRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,48 +67,7 @@ public class ConfigService {
         // Optional<Config> configOptional;
         // Config config=null;
 
-        // temps de validité, en seconde, du code d'activation de compte lors d'un enregistrement d'un utilisateur 
-        this.setConfig("spring.user-account.second-to-activate-account", secondToActivateAccount);
-
-        // mot de passe par defaut du super admin
-        this.setConfig("aplose.framework.superAdmin.defaultPassword", superAdminDefaultPassword);
-
-        // phrase secrete pour le Json Web Token d'authentification
-        this.setConfig("aplose.framework.security.jwt.secretKey", jwtSecretKey);
-
-        //stripe api key
-        this.setConfig("stripe.api.key", stripeApiKey);
-
-        //stripe webhook secret
-        this.setConfig("stripe.webhook.secret", stripeWebHookSecret);
-
-        // google.client.id utilisé pour l'authentification grâce à Google
-        this.setConfig("google.client.id", googleClientId);
-
-        //dolibarr.api.url utilisé pour accéder à Dolibarr
-        //on utilise le dolibarr serenitydate par défaut
-        this.setConfig("dolibarr.api.url", dolibarrApiUrl);
-
-        //dolibarr.user.api.key utilisé pour accéder à Dolibarr
-        //on utilise le dolibarr serenitydate par défaut
-        this.setConfig("dolibarr.user.api.key", dolibarrUserApiKey);
-
-        //appRootUrl utilisé pour les liens stripe
-        this.setConfig("app.root.url", appRootUrl);
-
-        //aploseframework.backend.root.url utilisé pour les liens envoyés par email
-        this.setConfig("aploseframework.backend.root.url", "http://localhost:8087");
-        
-        //aploseframework.mail.fromEmail utilisé pour les envoi d'email
-        this.setConfig("aploseframework.mail.fromEmail", "noreply@aplose.fr");
-        
-        this.setConfig("vizulive.server.url", vizuliveServerUrl);
-        this.setConfig("vizulive.admin.id", vizuliveAdminId);
-        this.setConfig("vizulive.admin.user", vizuliveAdminUser);
-        this.setConfig("vizulive.admin.password", vizuliveAdminPassword);
-
-        this.setConfig("spring.mail.username", springMailUsername);
-        this.setConfig("spring.mail.password", springMailPassword);
+       
 
 
 
@@ -232,6 +189,49 @@ public class ConfigService {
         // // for(String keyToDelete:allKeys){
         // //     configRepository.deleteById(keyToDelete);
         // // }
+
+         // temps de validité, en seconde, du code d'activation de compte lors d'un enregistrement d'un utilisateur 
+         this.setConfig("spring.user-account.second-to-activate-account", secondToActivateAccount);
+
+         // mot de passe par defaut du super admin
+         this.setConfig("aplose.framework.superAdmin.defaultPassword", superAdminDefaultPassword);
+ 
+         // phrase secrete pour le Json Web Token d'authentification
+         this.setConfig("aplose.framework.security.jwt.secretKey", jwtSecretKey);
+ 
+         //stripe api key
+         this.setConfig("stripe.api.key", stripeApiKey);
+ 
+         //stripe webhook secret
+         this.setConfig("stripe.webhook.secret", stripeWebHookSecret);
+ 
+         // google.client.id utilisé pour l'authentification grâce à Google
+         this.setConfig("google.client.id", googleClientId);
+ 
+         //dolibarr.api.url utilisé pour accéder à Dolibarr
+         //on utilise le dolibarr serenitydate par défaut
+         this.setConfig("dolibarr.api.url", dolibarrApiUrl);
+ 
+         //dolibarr.user.api.key utilisé pour accéder à Dolibarr
+         //on utilise le dolibarr serenitydate par défaut
+         this.setConfig("dolibarr.user.api.key", dolibarrUserApiKey);
+ 
+         //appRootUrl utilisé pour les liens stripe
+         this.setConfig("app.root.url", appRootUrl);
+ 
+         //aploseframework.backend.root.url utilisé pour les liens envoyés par email
+         this.setConfig("aploseframework.backend.root.url", "http://localhost:8087");
+         
+         //aploseframework.mail.fromEmail utilisé pour les envoi d'email
+         this.setConfig("aploseframework.mail.fromEmail", "noreply@aplose.fr");
+         
+         this.setConfig("vizulive.server.url", vizuliveServerUrl);
+         this.setConfig("vizulive.admin.id", vizuliveAdminId);
+         this.setConfig("vizulive.admin.user", vizuliveAdminUser);
+         this.setConfig("vizulive.admin.password", vizuliveAdminPassword);
+ 
+         this.setConfig("spring.mail.username", springMailUsername);
+         this.setConfig("spring.mail.password", springMailPassword);
     }
 
     private void setConfig(String key, String value){

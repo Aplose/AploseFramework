@@ -49,7 +49,7 @@ public class StripeCapabilityWebhookController {
         Event event = null;
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, "whsec_f2bbdad3f5659e18b96eacd529b2e8b56a89a45f0202ecf063b1db70582249f8");
+            event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);
             
         } catch (Exception e) {
             System.out.println("\n\n Webhook ERROR:");
