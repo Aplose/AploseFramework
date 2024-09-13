@@ -4,13 +4,16 @@
  */
 package com.aplose.aploseframework.service;
 
+import org.checkerframework.checker.units.qual.g;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
 import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
@@ -40,7 +43,8 @@ public class AuthenticationService {
     private JwtTokenTool _jwtTokenUtil;
     @Autowired
     private GoogleIdentityService _googleService;
-
+    @Autowired
+    private PasswordEncoder _passwordEncoder;
 
 
 
@@ -57,30 +61,35 @@ public class AuthenticationService {
 
     public AuthResponseDTO internalLogin(String username, String password){
      
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken( username, password )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         final UserAccount userDetails = this._userAccountService.loadUserByUsername(username);
-        final String token = this._jwtTokenUtil.generateToken(userDetails);
 
-        return new AuthResponseDTO(
-            new Token(
-                token, 
-                AuthenticationTypeEnum.INTERNAL, 
-                this._jwtTokenUtil.extractClaim(token, Claims::getExpiration)
-            ),
-            userDetails
-        );
+        if(userDetails != null && this._passwordEncoder.encode(password).equals(userDetails.getPassword())){
+
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken( username, password )
+            );
+    
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            String token = this._jwtTokenUtil.generateToken(userDetails);
+    
+            return new AuthResponseDTO(
+                new Token(
+                    token, 
+                    AuthenticationTypeEnum.INTERNAL, 
+                    this._jwtTokenUtil.extractClaim(token, Claims::getExpiration)
+                ),
+                userDetails
+            );
+        }
+        return null;
     }
 
 
 
-    public AuthResponseDTO googleLogin(String token) throws VerificationException{
+    public AuthResponseDTO googleLogin(String googleToken) throws VerificationException{
 
-        JsonWebSignature.Payload payload = this._googleService.getPayload(token);
+        JsonWebSignature.Payload payload = this._googleService.getPayload(googleToken);
         UserAccount userAccount;
 
         try{
@@ -91,7 +100,25 @@ public class AuthenticationService {
             throw new VerificationException("UserAccount with username" + payload.get("email") + " not exist");
         }
 
-        return this.internalLogin(userAccount.getUsername(), payload.getSubject());
-    }
+        if(userAccount != null){
 
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken( userAccount.getUsername(), payload.getSubject() )
+            );
+    
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            
+            String token = this._jwtTokenUtil.generateToken(userAccount);
+    
+            return new AuthResponseDTO(
+                new Token(
+                    token, 
+                    AuthenticationTypeEnum.GOOGLE, 
+                    this._jwtTokenUtil.extractClaim(token, Claims::getExpiration)
+                ),
+                userAccount
+            );
+        }
+        return null;
+    }
 }

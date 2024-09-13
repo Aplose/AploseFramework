@@ -30,8 +30,8 @@ public class ConfigService {
     private Long secondToActivateAccount;
     @Value("${dolibarr.api.url}")
     private String dolibarrApiUrl;
-    @Value("${dolibarr.user.api.key}")
-    private String dolibarrUserApiKey;
+    @Value("${dolibarr.api.userkey}")
+    private String dolibarrApiUserkey;
     @Value("${app.root.url}")
     private String appRootUrl;
     @Value("${stripe.webhook.secret}")
@@ -145,11 +145,11 @@ public class ConfigService {
         // }else{
         //     allKeys.remove(configOptional.get().getConfigKey());
         // }
-        // //dolibarr.user.api.key utilisé pour accéder à Dolibarr
+        // //dolibarr.api.userkey utilisé pour accéder à Dolibarr
         // //on utilise le dolibarr serenitydate par défaut
-        // configOptional = configRepository.findById("dolibarr.user.api.key");
+        // configOptional = configRepository.findById("dolibarr.api.userkey");
         // if(configOptional.isEmpty()){
-        //     config = new Config("dolibarr.user.api.key", dolibarrUserApiKey);
+        //     config = new Config("dolibarr.api.userkey", dolibarrApiUserkey);
         //     configRepository.save(config);
         //     allKeys.remove(config.getConfigKey());
         //     configurations.put(config.getConfigKey(), config);
@@ -212,9 +212,9 @@ public class ConfigService {
          //on utilise le dolibarr serenitydate par défaut
          this.setConfig("dolibarr.api.url", dolibarrApiUrl);
  
-         //dolibarr.user.api.key utilisé pour accéder à Dolibarr
+         //dolibarr.api.userkey utilisé pour accéder à Dolibarr
          //on utilise le dolibarr serenitydate par défaut
-         this.setConfig("dolibarr.user.api.key", dolibarrUserApiKey);
+         this.setConfig("dolibarr.api.userkey", dolibarrApiUserkey);
  
          //appRootUrl utilisé pour les liens stripe
          this.setConfig("app.root.url", appRootUrl);

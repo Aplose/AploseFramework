@@ -57,16 +57,24 @@ import org.springframework.web.client.RestClientException;
  */
 @Service
 public class DolibarrService {
+
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private RestClient restClient;
     private String dolibarrApiUrl;
     private String dolibarrUserApiKey;
     private final Map<String, Class<? extends AbstractDictionnary[]>> dictionaryTypes = new HashMap<>();
     private final Map<String, Class<? extends DolibarrObject[]>> dolibarrObjectArrayTypes = new HashMap<>();
     private final Map<String, Class<? extends DolibarrObject>> dolibarrObjectTypes = new HashMap<>();
     private final Map<String,String> dolibarrObjectRouteNameByType = new HashMap<>();
-    @Autowired
-    RestClient restClient;
+
+
+    public DolibarrService(ConfigService configService, RestClient restClient){
+        this.configService = configService;
+        this.restClient = restClient;
+    }
+
 
     @PostConstruct
     private void init() {
@@ -136,7 +144,7 @@ public class DolibarrService {
 
 
         dolibarrApiUrl = configService.getStringConfig("dolibarr.api.url");
-        dolibarrUserApiKey=configService.getStringConfig("dolibarr.user.api.key");
+        dolibarrUserApiKey=configService.getStringConfig("dolibarr.api.userkey");
 /*        ThirdParty t= new ThirdParty();
         t.setEntity(1);
         t.setName("Test post from AploseFramework");

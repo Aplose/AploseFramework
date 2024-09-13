@@ -63,7 +63,12 @@ public class RegisterService {
         }
 
         if(authenticationType == AuthenticationTypeEnum.INTERNAL){
-            this.setAndSendActivationCode(person.getUserAccount());
+            this.setActivationCode(person.getUserAccount());
+            this._emailService.sendRegistrationSuccessfullMessage(
+                person.getUserAccount().getLocale(),
+                person.getUserAccount().getActivationCode(),
+                person.getUserAccount().getUsername()
+            );
         }
 
         this.retrieveAndSetCivility(person);
@@ -120,22 +125,21 @@ public class RegisterService {
 
 
     public void reSendActivationCode(UserAccount userAccount){
-        this.setAndSendActivationCode(userAccount);
+        this.setActivationCode(userAccount);
+        this._emailService.sendRegistrationSuccessfullMessage(
+            userAccount.getLocale(),
+            userAccount.getActivationCode(),
+            userAccount.getUsername());
         this._userAccountService.save(userAccount);
     }
     
 
 
-    public void setAndSendActivationCode(UserAccount userAccount){
+    public void setActivationCode(UserAccount userAccount){
         System.err.println("\n\tSEND MAIL\n\n");
         DecimalFormat format = new DecimalFormat("0000");
         userAccount.setActivationCode(format.format(new SecureRandom().nextInt(9999)));
         userAccount.setActivationCodeInstant(Instant.now());
-        this._emailService.sendRegistrationSuccessfullMessage(
-            userAccount.getLocale(),
-            userAccount.getActivationCode(),
-            userAccount.getUsername()
-        );
     }
 
 
