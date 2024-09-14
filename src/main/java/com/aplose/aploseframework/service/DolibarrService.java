@@ -188,7 +188,7 @@ public class DolibarrService {
     //DICTIONNARY
     public AbstractDictionnary[] getDictionnary(String name, Map<String,String> params){
         StringBuilder sb = new StringBuilder();
-        sb.append(dolibarrApiUrl+"/setup/dictionary/"+name+"?DOLAPIKEY="+dolibarrUserApiKey);
+        sb.append(dolibarrApiUrl+"/setup/dictionary/"+name+"?DOLAPIKEY="+dolibarrUserApiKey+"&limit=0");
         if (params!=null){
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 sb.append("&").append(entry.getKey()).append("=").append(entry.getValue());
@@ -227,7 +227,7 @@ public class DolibarrService {
     public DolibarrObject[] getAllObjectsForCategory(String idCat, String type){
         Map<String,String> params = new HashMap<>();
         params.put("type", type);
-        String url = dolibarrApiUrl+"/categories/"+idCat+"/objects?DOLAPIKEY="+dolibarrUserApiKey+"&type="+type;
+        String url = dolibarrApiUrl+"/categories/"+idCat+"/objects?DOLAPIKEY="+dolibarrUserApiKey+"&limit=0&type="+type;
         DolibarrObject[] result = new DolibarrObject[0];
         try {
             result = restClient.get()
@@ -278,7 +278,7 @@ public class DolibarrService {
     public DolibarrObject[] getAll(String name, Map<String,String> params){
         DolibarrObject[] result = new DolibarrObject[0];
         StringBuilder sb = new StringBuilder();
-        sb.append(dolibarrApiUrl+"/"+name+"?DOLAPIKEY="+dolibarrUserApiKey);
+        sb.append(dolibarrApiUrl+"/"+name+"?DOLAPIKEY="+dolibarrUserApiKey+"&limit=0");
         if (params!=null){
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 sb.append("&").append(entry.getKey()).append("=").append(entry.getValue());
