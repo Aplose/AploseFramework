@@ -86,13 +86,11 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/register", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
-                auth.requestMatchers(HttpMethod.GET, 
-                        "/api/ping",
-                        "/api/translation/**",
-                        "/api/config/**",
-                        "/api/dolibarr/**",
-                        "/api/dictionnary/**").permitAll();
-                auth.requestMatchers(HttpMethod.POST,"/api/dolibarr/**").permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/ping", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/translation/**", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/config/**", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "POST")).permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
