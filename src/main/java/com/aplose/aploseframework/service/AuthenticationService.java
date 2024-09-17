@@ -63,7 +63,7 @@ public class AuthenticationService {
      
         final UserAccount userDetails = this._userAccountService.loadUserByUsername(username);
 
-        if(userDetails != null && this._passwordEncoder.encode(password).equals(userDetails.getPassword())){
+        if(userDetails != null && this._passwordEncoder.matches(password, userDetails.getPassword())){
 
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken( username, password )

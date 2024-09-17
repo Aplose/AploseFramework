@@ -50,6 +50,7 @@ public class internalLoginTest {
         when(this.userAccountService.loadUserByUsername(defaultUsername)).thenReturn(defaultUserAccount);
         when(this._passwordEncoder.encode(defaultNonEncodedPassword)).thenReturn(defaultEncodedPassword);
         when(this._passwordEncoder.encode(wrongPassword)).thenReturn(wrongPassword);
+        when(this._passwordEncoder.matches(defaultNonEncodedPassword, defaultEncodedPassword)).thenReturn(true);
     }
 
     private UserAccount defaultUserAccount = new UserAccount();
