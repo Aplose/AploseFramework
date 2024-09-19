@@ -34,8 +34,16 @@ public class ConfigService {
     private String dolibarrApiUserkey;
     @Value("${app.root.url}")
     private String appRootUrl;
-    @Value("${stripe.webhook.secret}")
-    private String stripeWebHookSecret;
+    @Value("${stripe.webhook.account.secretkey}")
+    private String stripeWebHookAccountSecretKey;
+    @Value("${stripe.webhook.customer.secretkey}")
+    private String stripeWebHookCustomerSecretKey;
+    @Value("${stripe.webhook.identity.secretkey}")
+    private String stripeWebHookIdentitySecretKey;
+    @Value("${stripe.webhook.capability.secretkey}")
+    private String stripeWebHookCapabilitySecretKey;
+
+
     @Value("${stripe.api.key}")
     private String stripeApiKey;
     @Value("${aplose.framework.security.jwt.secretKey}")
@@ -44,17 +52,17 @@ public class ConfigService {
     private String superAdminDefaultPassword;
     @Value("${google.client.id}")
     private String googleClientId;
-    @Value("vizulive.server.url")
+    @Value("${vizulive.server.url}")
     private String vizuliveServerUrl;
-    @Value("vizulive.admin.id")
+    @Value("${vizulive.admin.id}")
     private String vizuliveAdminId;
-    @Value("vizulive.admin.user")
+    @Value("${vizulive.admin.user}")
     private String vizuliveAdminUser;
-    @Value("vizulive.admin.password")
+    @Value("${vizulive.admin.password}")
     private String vizuliveAdminPassword;
-    @Value("spring.mail.username")
+    @Value("${spring.mail.username}")
     private String springMailUsername;
-    @Value("spring.mail.password")
+    @Value("${spring.mail.password}")
     private String springMailPassword;
     
     private Map<String,Config> configurations = new HashMap<>();
@@ -202,8 +210,17 @@ public class ConfigService {
          //stripe api key
          this.setConfig("stripe.api.key", stripeApiKey);
  
-         //stripe webhook secret
-         this.setConfig("stripe.webhook.secret", stripeWebHookSecret);
+         //stripe account webhook secret key
+         this.setConfig("stripe.webhook.account.secretkey", stripeWebHookAccountSecretKey);
+
+        //stripe customer webhook secret key
+        this.setConfig("stripe.webhook.customer.secretkey", stripeWebHookCustomerSecretKey);
+
+        //stripe identity webhook secret key
+         this.setConfig("stripe.webhook.identity.secretkey", stripeWebHookIdentitySecretKey);
+
+        //stripe capability webhook secret key
+        this.setConfig("stripe.webhook.capability.secretkey", stripeWebHookCapabilitySecretKey);
  
          // google.client.id utilisé pour l'authentification grâce à Google
          this.setConfig("google.client.id", googleClientId);

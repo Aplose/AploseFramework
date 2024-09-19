@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-import java.sql.Date;
-import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.aplose.aploseframework.dto.AuthResponseDTO;
@@ -48,6 +47,7 @@ public class internalLoginTest {
         MockitoAnnotations.openMocks(this);
         when(this._jwtTokenTool.generateToken(defaultUserAccount)).thenReturn(defaultCorrectAccessToken);
         when(this.userAccountService.loadUserByUsername(defaultUsername)).thenReturn(defaultUserAccount);
+        when(this.userAccountService.loadUserByUsername(wrongUsername)).thenThrow(UsernameNotFoundException.class);
         when(this._passwordEncoder.encode(defaultNonEncodedPassword)).thenReturn(defaultEncodedPassword);
         when(this._passwordEncoder.encode(wrongPassword)).thenReturn(wrongPassword);
         when(this._passwordEncoder.matches(defaultNonEncodedPassword, defaultEncodedPassword)).thenReturn(true);
@@ -103,6 +103,7 @@ public class internalLoginTest {
         AuthResponseDTO response = this._authenticationService.internalLogin(wrongUsername, defaultNonEncodedPassword);
         // ASSERT
         // la méthode retourne null lorsque les identifiants ne sont pas correctes
+        System.err.println("\n\n response: "+ response + "\n");
         assertNull(response);
     }
     

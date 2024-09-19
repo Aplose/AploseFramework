@@ -4,16 +4,15 @@
  */
 package com.aplose.aploseframework.service;
 
-import org.checkerframework.checker.units.qual.g;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
 import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.UserAccount;
@@ -60,10 +59,16 @@ public class AuthenticationService {
     
 
     public AuthResponseDTO internalLogin(String username, String password){
-     
-        final UserAccount userDetails = this._userAccountService.loadUserByUsername(username);
 
-        if(userDetails != null && this._passwordEncoder.matches(password, userDetails.getPassword())){
+        final UserAccount userDetails;
+
+        try{
+            userDetails = this._userAccountService.loadUserByUsername(username);
+        }catch(UsernameNotFoundException e){
+            return null;
+        }
+
+        if(this._passwordEncoder.matches(password, userDetails.getPassword())){
 
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken( username, password )

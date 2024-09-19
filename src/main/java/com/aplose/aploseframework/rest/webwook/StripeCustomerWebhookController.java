@@ -1,6 +1,7 @@
 package com.aplose.aploseframework.rest.webwook;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.service.ConfigService;
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 
@@ -29,20 +31,21 @@ public class StripeCustomerWebhookController {
 
     @PostConstruct
     public void init(){
-        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.customer.secretkey");
+        System.err.println("\n\n stripe.webhook.customer.secretkey: "+stripeWebHookSecret );
         Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
     
 
     @PostMapping()
-    public String handleCustomerWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
+    public ResponseEntity<String> handleCustomerWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
 
         Event event = null;
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);
-        } catch (Exception e) {
-            return "Webhook error: " + e.getMessage();
+        } catch (SignatureVerificationException e) {
+            return ResponseEntity.badRequest().body("SignatureVerificationException: " + e.getMessage());
         }
 
 
@@ -228,6 +231,6 @@ public class StripeCustomerWebhookController {
                 System.out.println("Unhandled event type: " + event.getType());
         }
 
-        return "Success";
+        return ResponseEntity.ok("Success");
     }
 }
