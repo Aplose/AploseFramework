@@ -26,7 +26,7 @@ public class ThirdParty extends DolibarrObject{
     private String  zip;
     private Integer region_id;
     private Integer state_id;
-    private Long    country_id;     // ! 'sqlfilters' (param dans requête sur l'api dolibarr) ne fonctionne que avec country_code, pas country_id
+    private Integer    country_id;     // ! 'sqlfilters' (param dans requête sur l'api dolibarr) ne fonctionne que avec country_code, pas country_id
     private String  country_code;   
     private Integer client = 0;     // Utiliser les constantes de DolibarrThirdPartyClientTypes
     private Integer fournisseur;
@@ -257,11 +257,11 @@ public class ThirdParty extends DolibarrObject{
         this.town = town;
     }
 
-    public Long getCountry_id() {
+    public Integer getCountry_id() {
         return country_id;
     }
 
-    public void setCountry_id(Long country_id) {
+    public void setCountry_id(Integer country_id) {
         this.country_id = country_id;
     }
 

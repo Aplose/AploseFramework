@@ -6,18 +6,18 @@ public class Country  extends AbstractDictionnary{
 
     public final static String NAME = "countries";
 
-    private Long id;
+    private Integer id;
     private Long entity;
     private String code;
     private String codeIso;
     private String label;
     private Integer active;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

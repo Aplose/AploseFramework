@@ -1,7 +1,6 @@
 package com.aplose.aploseframework.rest.webwook;
 
 import com.aplose.aploseframework.service.ConfigService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 
 @RestController
@@ -30,21 +31,21 @@ public class StripeIdentityWebhookController {
 
     @PostConstruct
     public void init(){
-        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.identity.secretkey");
         Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
 
 
 
     @PostMapping()
-    public String handleStripeIdentityVerification(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
+    public ResponseEntity<String> handleStripeIdentityVerification(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
 
         Event event = null;
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, this.stripeWebHookSecret);
-        } catch (Exception e) {
-            return "Webhook error: " + e.getMessage();
+        } catch (SignatureVerificationException e) {
+            return ResponseEntity.badRequest().body("SignatureVerificationException: " + e.getMessage());
         }
 
 
@@ -113,6 +114,6 @@ public class StripeIdentityWebhookController {
             default:
                 System.out.println("Unhandled event type: " + event.getType());
           }
-        return "Success";
+        return ResponseEntity.ok("Success");
         }
 }

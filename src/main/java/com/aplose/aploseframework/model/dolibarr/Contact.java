@@ -13,7 +13,7 @@ import com.aplose.aploseframework.model.Person;
  */
 public class Contact extends DolibarrObject {
 
-    private Long civility_id;
+    private Integer civility_id;
     private String civility_code;
     private String civility;
     private String firstname;
@@ -23,9 +23,9 @@ public class Contact extends DolibarrObject {
     private String address;
     private String zip;
     private String town;
-    private Long country_id;
+    private Integer country_id;
     private String country_code;
-    private Long socid;  // ThirdParty id
+    private Integer socid;  // ThirdParty id
     private Integer admin = 0;  // 0 = false; 1 = true
 
 
@@ -122,22 +122,22 @@ public class Contact extends DolibarrObject {
     }
 
 
-    public Long getCountry_id() {
+    public Integer getCountry_id() {
         return country_id;
     }
 
 
-    public void setCountry_id(Long country_id) {
+    public void setCountry_id(Integer country_id) {
         this.country_id = country_id;
     }
 
 
-    public Long getSocid() {
+    public Integer getSocid() {
         return socid;
     }
 
 
-    public void setSocid(Long socid) {
+    public void setSocid(Integer socid) {
         this.socid = socid;
     }
 
@@ -172,12 +172,12 @@ public class Contact extends DolibarrObject {
     }
 
 
-    public Long getCivility_id() {
+    public Integer getCivility_id() {
         return civility_id;
     }
 
 
-    public void setCivility_id(Long civility_id) {
+    public void setCivility_id(Integer civility_id) {
         this.civility_id = civility_id;
     }
 

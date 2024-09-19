@@ -85,9 +85,9 @@ public class googleLoginTest {
         when(userAccountMock.getUsername()).thenReturn("test@test.fr");
         when(userAccountMock.getPassword()).thenReturn("defaultEncodedPassword");
         when(userAccountMock.getCompanyName()).thenReturn("companyNameTest");
-        when(userAccountMock.getDolibarrContactId()).thenReturn(18L);
-        when(userAccountMock.getDolibarrThirdPartyId()).thenReturn(4L);
-        when(userAccountMock.getDolibarrUserId()).thenReturn(61L);
+        when(userAccountMock.getDolibarrContactId()).thenReturn(18);
+        when(userAccountMock.getDolibarrThirdPartyId()).thenReturn(4);
+        when(userAccountMock.getDolibarrUserId()).thenReturn(61);
         when(userAccountMock.getRoles()).thenReturn(List.of(roleMock));
         when(userAccountMock.getId()).thenReturn(7L);
         

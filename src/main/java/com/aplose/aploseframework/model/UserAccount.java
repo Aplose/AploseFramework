@@ -56,11 +56,11 @@ public class UserAccount implements UserDetails {
     private List<Permission> permissions = new ArrayList<>();
     
     @JsonIgnore
-    private Long dolibarrThirdPartyId;
+    private Integer dolibarrThirdPartyId;
     @JsonIgnore
-    private Long dolibarrContactId;
+    private Integer dolibarrContactId;
     @JsonIgnore
-    private Long dolibarrUserId;
+    private Integer dolibarrUserId;
 
 
     @JsonIgnore
@@ -216,29 +216,30 @@ public class UserAccount implements UserDetails {
         this.permissions = permissions;
     }
 
-    public Long getDolibarrThirdPartyId() {
+    public Integer getDolibarrThirdPartyId() {
         return dolibarrThirdPartyId;
     }
 
-    public void setDolibarrThirdPartyId(Long dolibarrThirdPartyId) {
+    public void setDolibarrThirdPartyId(Integer dolibarrThirdPartyId) {
         this.dolibarrThirdPartyId = dolibarrThirdPartyId;
     }
 
-    public Long getDolibarrContactId() {
+    public Integer getDolibarrContactId() {
         return dolibarrContactId;
     }
 
-    public void setDolibarrContactId(Long dolibarrContactId) {
+    public void setDolibarrContactId(Integer dolibarrContactId) {
         this.dolibarrContactId = dolibarrContactId;
     }
 
-    public Long getDolibarrUserId() {
+    public Integer getDolibarrUserId() {
         return dolibarrUserId;
     }
 
-    public void setDolibarrUserId(Long dolibarrUserId) {
+    public void setDolibarrUserId(Integer dolibarrUserId) {
         this.dolibarrUserId = dolibarrUserId;
     }
+
 
     public Boolean getStripeApplicationIsAuthorized() {
         return stripeApplicationIsAuthorized;

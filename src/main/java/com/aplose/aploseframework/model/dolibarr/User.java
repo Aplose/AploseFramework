@@ -21,15 +21,15 @@ public class User extends DolibarrObject {
     private String firstname;
     private String lastname;
     private String email;
-    private Long country_id;
+    private Integer country_id;
     private String country_code;
     private String address;
     private String town;
     private String zip;
     private String login;
     private String password;
-    private Long socid; // ThirdParty id
-    private Long contact_id; // Contact id
+    private Integer socid; // ThirdParty id
+    private Integer contact_id; // Contact id
     private Integer admin = 0;  // 0 = false; 1 = true
 
 
@@ -135,12 +135,12 @@ public class User extends DolibarrObject {
     }
 
 
-    public Long getCountry_id() {
+    public Integer getCountry_id() {
         return country_id;
     }
 
 
-    public void setCountry_id(Long country_id) {
+    public void setCountry_id(Integer country_id) {
         this.country_id = country_id;
     }
 
@@ -185,21 +185,21 @@ public class User extends DolibarrObject {
     }
 
 
-    public Long getSocid() {
+    public Integer getSocid() {
         return socid;
     }
 
 
-    public void setSocid(Long socid) {
+    public void setSocid(Integer socid) {
         this.socid = socid;
     }
 
-    public Long getContact_id() {
+    public Integer getContact_id() {
         return contact_id;
     }
 
 
-    public void setContact_id(Long contact_id) {
+    public void setContact_id(Integer contact_id) {
         this.contact_id = contact_id;
     }
 

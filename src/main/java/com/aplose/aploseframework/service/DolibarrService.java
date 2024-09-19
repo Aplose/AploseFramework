@@ -263,13 +263,13 @@ public class DolibarrService {
      * Create any DolibarrObject welformed (Thirdparty, contact, user...)
      * @return Integer The id of created Object
     */   
-    public Long createDolibarrObject(DolibarrObject dolibarrObject){
-        ResponseEntity<Long> response = restClient.post()
+    public Integer createDolibarrObject(DolibarrObject dolibarrObject){
+        ResponseEntity<Integer> response = restClient.post()
                 .uri(dolibarrApiUrl+dolibarrObject.getEndPoint()+"?DOLAPIKEY="+dolibarrUserApiKey)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(dolibarrObject)
-                .retrieve().toEntity(Long.class);
+                .retrieve().toEntity(Integer.class);
         return response.getBody();
     }
     /**
@@ -299,7 +299,7 @@ public class DolibarrService {
     /**
      * Get one Dolibarr object by id
      */
-    public DolibarrObject getById(String name, Long id){
+    public DolibarrObject getById(String name, Integer id){
         try{
             return this.restClient.get()
                 .uri(dolibarrApiUrl + "/" + name + "/" + String.valueOf(id) + "?DOLAPIKEY=" + dolibarrUserApiKey)
@@ -314,7 +314,7 @@ public class DolibarrService {
     }
 
 
-    public void update(String name, Long id, DolibarrObject entity){
+    public void update(String name, Integer id, DolibarrObject entity){
         this.restClient.put()
             .uri(dolibarrApiUrl + "/" + name + "/" + id + "?DOLAPIKEY=" + dolibarrUserApiKey)
             .contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +326,7 @@ public class DolibarrService {
     }
     
 
-    public Long createExternalUser(Long contactId, String login, String password){
+    public Integer createExternalUser(Integer contactId, String login, String password){
         
         Map<String, String> map = new HashMap<String, String>();
         map.put("login", login);
@@ -338,7 +338,7 @@ public class DolibarrService {
             .body(map)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .body(Long.class);
+            .body(Integer.class);
     }
     
     //DOCUMENTS

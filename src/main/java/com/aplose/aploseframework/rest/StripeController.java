@@ -82,7 +82,7 @@ public class StripeController {
     @GetMapping("/account-link")
     public ResponseEntity<String> sendAccountLink(@AuthenticationPrincipal UserAccount userAccount){
         this._stripeAccountService.resendAccountLinkByMail(userAccount);
-        return ResponseEntity.ok().body("AccountLink sended");
+        return ResponseEntity.ok("AccountLink sended");
     }
 
 

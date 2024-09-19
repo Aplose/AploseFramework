@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author oandrade
  */
 public abstract class DolibarrObject {
-    Long id;
+    Integer id;
     Integer entity;    
     @JsonIgnore
     String endPoint;
@@ -21,11 +21,11 @@ public abstract class DolibarrObject {
 
     public DolibarrObject(){}
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,10 +1,8 @@
 package com.aplose.aploseframework.rest.webwook;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -41,7 +39,7 @@ public class StripeAccountWebhookController {
 
     @PostConstruct
     public void init(){
-        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.secret");
+        stripeWebHookSecret = configService.getStringConfig("stripe.webhook.account.secretkey");
         Stripe.apiKey = configService.getStringConfig("stripe.api.key");
     }
 

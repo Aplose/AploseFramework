@@ -109,8 +109,8 @@ public class StripeAccountService {
         try{
             AccountLinkCreateParams params = AccountLinkCreateParams.builder()
                 .setAccount(accountId)
-                .setRefreshUrl(this._configService.getStringConfig("app.root.url") + "/refresh-accout-link")
-                .setReturnUrl("https://google.com")
+                .setRefreshUrl(this._configService.getStringConfig("app.root.url") + "/refresh-account-link")
+                .setReturnUrl(this._configService.getStringConfig("app.root.url"))
                 .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
                 .build();
     
