@@ -100,12 +100,16 @@ public class SecurityConfig {
     }
     @Bean
     @Order(2)
-    SecurityFilterChain h2ConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain dbConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.securityMatcher(AntPathRequestMatcher.antMatcher("/h2-console/**"))
             .authorizeHttpRequests( auth -> {
                 auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
+                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**")).permitAll();
             })
-            .csrf(csrf -> csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")))
+            .csrf(csrf -> {
+                csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"));
+                csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**"));
+                    })
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
             .build();
     }  
