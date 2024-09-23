@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.service.ConfigService;
 import com.aplose.aploseframework.service.UserAccountService;
@@ -72,10 +71,8 @@ public class StripeAccountWebhookController {
                 System.out.println("\n\n\t ERROR at webhook.stripe.account.updated: " + e.getMessage());
                 return ResponseEntity.badRequest().body("ERROR at webhook.stripe.account.updated: " + e.getMessage());
               }
-              developHelper.printObject(account, null);
               
               UserAccount userAccount = this._userAccountService.loadUserByUsername(account.getEmail());
-              developHelper.printObject(userAccount, null);
 
               if(account.getCapabilities().getTransfers().equals("active")){
                 userAccount.setStripeTransferIsEnabled(true);

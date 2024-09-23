@@ -1,6 +1,5 @@
 package com.aplose.aploseframework.rest.webwook;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.service.ConfigService;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
@@ -58,7 +56,6 @@ public class StripeCustomerWebhookController {
             case "customer.created": {
                 System.err.println("customer.created");
                 System.err.println("event: " );
-                developHelper.printObject(event,null);
                 break;
             }
 

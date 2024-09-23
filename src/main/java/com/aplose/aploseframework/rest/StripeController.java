@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.stripe.CreateCheckoutDto;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dolibarr.ThirdParty;
@@ -39,6 +38,7 @@ public class StripeController {
     private ServiceService _serviceService;
     @Autowired
     private StripeAccountService _stripeAccountService;
+    
 
 
 
@@ -57,12 +57,7 @@ public class StripeController {
 
     @GetMapping("/account/{id}")
     public ResponseEntity<String> getAccount(@PathVariable("id") String accountId) throws StripeException{
-        Account account = this._stripeAccountService.getById(accountId);
-     
-
-        developHelper.printObject(account, null);
-
-        return ResponseEntity.ok(account.toJson());
+        return ResponseEntity.ok(this._stripeAccountService.getById(accountId).toJson());
     }
 
 
@@ -87,15 +82,10 @@ public class StripeController {
 
 
 
-    @GetMapping("/infos")
-    public void getInfos(@AuthenticationPrincipal UserAccount userAccount) throws StripeException{
-        // ThirdParty thirdParty = (ThirdParty) this._dolibarrService.getById(ThirdParty.NAME, userAccount.getDolibarrThirdPartyId());
-        // developHelper.printObject(thirdParty, null);
-        // ;
-        // this._stripeAccountService.checkAccountInformations(thirdParty.getStripeAccountId());
-
-        Account account = this._stripeAccountService.getById("a@b.fr");
-
-        developHelper.printObject(account, null);
-    }
+    // @GetMapping("/infos")
+    // public void getInfos(@AuthenticationPrincipal UserAccount userAccount) throws StripeException{
+    //     Account account = this._stripeAccountService.getById(
+    //         ((ThirdParty) this._dolibarrService.getById(ThirdParty.NAME, userAccount.getDolibarrThirdPartyId())).getStripeAccountId()
+    //     );
+    // }
 }

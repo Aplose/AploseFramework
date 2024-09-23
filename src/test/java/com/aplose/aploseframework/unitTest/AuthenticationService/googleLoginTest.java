@@ -2,25 +2,20 @@ package com.aplose.aploseframework.unitTest.AuthenticationService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
 import java.util.List;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.dto.AuthResponseDTO;
 import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 import com.aplose.aploseframework.model.Permission;
@@ -34,7 +29,6 @@ import com.aplose.aploseframework.service.GoogleIdentityService;
 import com.aplose.aploseframework.service.UserAccountService;
 import com.aplose.aploseframework.tool.jwt.JwtTokenTool;
 import com.google.api.client.json.webtoken.JsonWebSignature;
-import com.google.api.client.json.webtoken.JsonWebToken.Payload;
 import com.google.auth.oauth2.TokenVerifier.VerificationException;
 
 public class googleLoginTest {
@@ -101,7 +95,6 @@ public class googleLoginTest {
     private String googleTokenMock = "default_google_token";
     private String uniqueGoogleCustomerIdMock = "unique_google_customer_id";
     
-    private String NonEncodedPasswordMock = "defaultNonEncodedPassword1234!!!!";
     
     
     
