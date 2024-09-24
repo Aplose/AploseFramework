@@ -220,6 +220,7 @@ public class DolibarrService {
                 .retrieve()
                 .body(Category[].class);
         }catch(RestClientException rce){
+            rce.printStackTrace();
             System.out.println("No category for type "+type);
         }
         return result;
@@ -236,6 +237,7 @@ public class DolibarrService {
                     .retrieve()
                     .body(dolibarrObjectArrayTypes.get(type));
         } catch (RestClientException rce) {
+            rce.printStackTrace();
             System.out.println("No objects of type "+type+" for category "+idCat);
         }
         return result;
@@ -251,6 +253,7 @@ public class DolibarrService {
                 .retrieve()
                 .body(Category[].class);
         }catch(RestClientException rce){
+            rce.printStackTrace();
             System.out.println("No category for product "+id);
         }
         return result;
@@ -291,6 +294,7 @@ public class DolibarrService {
                     .retrieve()
                     .body(dolibarrObjectArrayTypes.get(name));
         }catch(RestClientException rce){
+            rce.printStackTrace();
         }
         return result;
     }
@@ -308,7 +312,8 @@ public class DolibarrService {
                 .body(dolibarrObjectTypes.get(name));
         }
         catch(RestClientException e){
-            System.err.println("\n\n\tRestClientException DolibarrService.getById(): " + e.getMessage());
+            System.err.println("\n\n\tRestClientException DolibarrService.getById(): ");
+            e.printStackTrace();
             return null;
         }
     }
