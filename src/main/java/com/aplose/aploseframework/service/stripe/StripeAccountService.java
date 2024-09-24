@@ -115,7 +115,6 @@ public class StripeAccountService {
                 .build();
     
             AccountLink accountLink = AccountLink.create(params);
-            // developHelper.printObject(accountLink, null);
             return accountLink;
         }
         catch(StripeException e){

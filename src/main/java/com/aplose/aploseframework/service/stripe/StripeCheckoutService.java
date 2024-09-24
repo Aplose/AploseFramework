@@ -4,7 +4,6 @@ package com.aplose.aploseframework.service.stripe;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.Service;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dolibarr.ThirdParty;
@@ -36,10 +35,7 @@ public class StripeCheckoutService {
             customerThirdParty = (ThirdParty) this._dolibarrService.getById(ThirdParty.NAME, userAccount.getDolibarrThirdPartyId());
         }
 
-        developHelper.printObject(service.getProfessional(), null);
-        developHelper.printObject(professionalThirdParty, "createPaymentIntent()");
         try{
-            
             
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(service.getPrice())
@@ -57,8 +53,6 @@ public class StripeCheckoutService {
                 .build();
             PaymentIntent paymentIntent = PaymentIntent.create(params);
             
-            developHelper.printObject(paymentIntent, null);
-    
             return paymentIntent;
         }
         catch(StripeException e){

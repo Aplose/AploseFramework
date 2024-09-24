@@ -1,7 +1,6 @@
 package com.aplose.aploseframework.rest.webwook;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aplose.aploseframework.ZDEVELOP.devController;
-import com.aplose.aploseframework.ZDEVELOP.developHelper;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.service.ConfigService;
 import com.aplose.aploseframework.service.UserAccountService;
