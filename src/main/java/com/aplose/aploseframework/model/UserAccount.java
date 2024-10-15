@@ -61,7 +61,8 @@ public class UserAccount implements UserDetails {
     private Integer dolibarrContactId;
     @JsonIgnore
     private Integer dolibarrUserId;
-
+    @JsonIgnore
+    private Integer dolibarrPendingProposalId;  // devis en cours
 
     @JsonIgnore
     private Boolean stripeApplicationIsAuthorized; // L'application (SerenityDate) est autorisée par le propriétaire du compte connecté
@@ -271,6 +272,14 @@ public class UserAccount implements UserDetails {
 
     public void setStripeTransferIsEnabled(Boolean stripeTransferIsEnabled) {
         this.stripeTransferIsEnabled = stripeTransferIsEnabled;
+    }
+
+    public Integer getDolibarrPendingProposalId() {
+        return dolibarrPendingProposalId;
+    }
+
+    public void setDolibarrPendingProposalId(Integer dolibarrPendingProposalId) {
+        this.dolibarrPendingProposalId = dolibarrPendingProposalId;
     }
 
     

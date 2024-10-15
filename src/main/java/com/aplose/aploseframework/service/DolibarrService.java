@@ -1,6 +1,7 @@
 package com.aplose.aploseframework.service;
 
 
+import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
 import com.aplose.aploseframework.model.dictionnary.Civility;
 import com.aplose.aploseframework.model.dictionnary.Company;
@@ -32,6 +33,7 @@ import com.aplose.aploseframework.model.dolibarr.Order;
 import com.aplose.aploseframework.model.dolibarr.Product;
 import com.aplose.aploseframework.model.dolibarr.Project;
 import com.aplose.aploseframework.model.dolibarr.Proposal;
+import com.aplose.aploseframework.model.dolibarr.ProposalLine;
 import com.aplose.aploseframework.model.dolibarr.StockMovement;
 import com.aplose.aploseframework.model.dolibarr.SupplierInvoice;
 import com.aplose.aploseframework.model.dolibarr.SupplierOrder;
@@ -43,6 +45,7 @@ import jakarta.annotation.PostConstruct;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -62,6 +65,9 @@ public class DolibarrService {
     private ConfigService configService;
     @Autowired
     private RestClient restClient;
+    @Autowired
+    private UserAccountService _userAccountService;
+
     private String dolibarrApiUrl;
     private String dolibarrUserApiKey;
     private final Map<String, Class<? extends AbstractDictionnary[]>> dictionaryTypes = new HashMap<>();
@@ -390,5 +396,47 @@ public class DolibarrService {
         }
         return documentFile;
     }
+
+
+
+/*
+ * Ajoute une ligne à un devis (Proposal) ou crée un nouveau devis si nécessaire.
+ */
+public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLine){
+
+    // Récupération de l'ID du devis en cours de l'utilisateur
+    Integer proposalId = userAccount.getDolibarrPendingProposalId();
+
+    // Si l'utilisateur n'a pas encore de devis associé
+    if(proposalId == null){
+        // Création d'un nouveau devis (Proposal)
+        Proposal proposal = new Proposal();
+        // Association du tiers (ThirdParty) au devis
+        proposal.setSocid(userAccount.getDolibarrThirdPartyId());
+        // Assignation de la date de création au devis
+        proposal.setDatep(Instant.now().toString());
+        // Enregistrement du nouveau devis dans Dolibarr et récupération de son ID
+        proposalId = this.createDolibarrObject(proposal);
+        // Association de l'ID du devis à l'utilisateur
+        userAccount.setDolibarrPendingProposalId(proposalId);
+        // Sauvegarde de la mise à jour de l'utilisateur
+        this._userAccountService.save(userAccount);
+    }
+
+    try {
+        // Envoi de la requête pour ajouter une ligne au devis et retour de l'ID de la nouvelle ligne
+        return this.restClient.post()
+            .uri(dolibarrApiUrl + "/proposals/" + proposalId + "/line?DOLAPIKEY=" + dolibarrUserApiKey)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(proposalLine)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(Integer.class);
+    } catch (RestClientException e) {
+        e.printStackTrace();
+        // Retourne 0 en cas d'échec de la requête
+        return 0;
+    }
+}
 
 }

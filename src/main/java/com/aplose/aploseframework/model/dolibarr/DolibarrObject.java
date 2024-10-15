@@ -13,7 +13,7 @@ public abstract class DolibarrObject {
     String endPoint;
     String ref;
     String ref_ext;
-    Integer status;        // Utiliser les constantes de DolibarrThirdPartyStatus 
+    Integer status;        // Utiliser les constantes de DolibarrStatus 
     String module;
     String import_key;
     String label;
