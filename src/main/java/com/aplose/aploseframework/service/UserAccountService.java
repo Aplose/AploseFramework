@@ -1,5 +1,6 @@
 package com.aplose.aploseframework.service;
 
+import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
@@ -9,7 +10,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,7 +77,19 @@ public class UserAccountService implements UserDetailsService{
 
 
     public UserAccount save(UserAccount userAccount){
-        return this._userAccountRepository.save(userAccount);
+        try{
+            return this._userAccountRepository.save(userAccount);
+        }
+        catch(DataIntegrityViolationException e){
+            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+                ConstraintViolationException constraintException = (ConstraintViolationException) e.getCause();
+                
+                if (constraintException.getConstraintName().equals("PUBLIC.CONSTRAINT_INDEX_9")) {
+                    throw new RegistrationException("This username allready exist.", e);
+                }
+            }
+            throw new RegistrationException("Error of data integrity.", e);
+        }
     }
 
 

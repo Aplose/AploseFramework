@@ -64,11 +64,6 @@ public class RegisterService {
 
         if(authenticationType == AuthenticationTypeEnum.INTERNAL){
             this.setActivationCode(person.getUserAccount());
-            this._emailService.sendRegistrationSuccessfullMessage(
-                person.getUserAccount().getLocale(),
-                person.getUserAccount().getActivationCode(),
-                person.getUserAccount().getUsername()
-            );
         }
 
         this.retrieveAndSetCivility(person);
@@ -79,6 +74,14 @@ public class RegisterService {
         person.setUserAccount(this._userAccountService.save(person.getUserAccount()));
 
         person = this._personService.save(person);
+
+        if(authenticationType == AuthenticationTypeEnum.INTERNAL){
+            this._emailService.sendRegistrationSuccessfullMessage(
+                person.getUserAccount().getLocale(),
+                person.getUserAccount().getActivationCode(),
+                person.getUserAccount().getUsername()
+            );
+        }
 
         if(authenticationType == AuthenticationTypeEnum.GOOGLE){
             this.activateAccount(person.getUserAccount());

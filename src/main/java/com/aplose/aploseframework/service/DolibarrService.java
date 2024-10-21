@@ -404,8 +404,15 @@ public class DolibarrService {
  */
 public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLine){
 
-    // Récupération de l'ID du devis en cours de l'utilisateur
-    Integer proposalId = userAccount.getDolibarrPendingProposalId();
+    Integer proposalId;
+    try{
+        // Récupération de l'ID du devis en cours de l'utilisateur
+        proposalId = userAccount.getDolibarrPendingProposalId();
+    }
+    catch(NullPointerException e){
+        proposalId = null;
+    }
+
 
     // Si l'utilisateur n'a pas encore de devis associé
     if(proposalId == null){
