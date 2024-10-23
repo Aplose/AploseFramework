@@ -51,8 +51,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Primary
     public JsonFactory jsonFactory(){
         StreamReadConstraints constraints = StreamReadConstraints.builder()
-                // .maxDocumentLength(Integer.MAX_VALUE)
-                // .maxNameLength(Integer.MAX_VALUE)
                 .maxNestingDepth(Integer.MAX_VALUE)
                 .maxNumberLength(Integer.MAX_VALUE)
             .maxStringLength(Integer.MAX_VALUE)  // Définir une longueur maximale très élevée
@@ -65,8 +63,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
     @Bean
     @Primary
-    public Jackson2ObjectMapperBuilder objectMapperBuilder(){
-        
+    public Jackson2ObjectMapperBuilder objectMapperBuilder(){        
         Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder = new Jackson2ObjectMapperBuilder();
         jackson2ObjectMapperBuilder
                 .factory(jsonFactory());

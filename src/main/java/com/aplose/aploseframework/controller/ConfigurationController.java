@@ -2,7 +2,6 @@ package com.aplose.aploseframework.controller;
 
 import com.aplose.aploseframework.model.Config;
 import com.aplose.aploseframework.service.ConfigService;
-import jdk.jfr.BooleanFlag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +21,8 @@ public class ConfigurationController {
     ConfigService configService;
     @GetMapping
     public String getConfigurationAdminScreen(Model model){
-        model.addAttribute("configurations", configService.getAllConfigs());
+        model.addAttribute("configs", configService.getAllConfigs());
+//        model.addAttribute("configToUpdate", new Config());
         return "configuration";
     }
     @PostMapping

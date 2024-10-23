@@ -6,17 +6,17 @@ package com.aplose.aploseframework.config;
 
 import com.aplose.aploseframework.filter.JwtAuthFilter;
 import com.aplose.aploseframework.security.DolibarrAuthenticationProvier;
-import com.aplose.aploseframework.service.UserAccountService;
 
 import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,16 +36,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
+    @Autowired
+    @Lazy
+    UserDetailsService userDetailsService;  
 
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
         return new JwtAuthFilter();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserAccountService();
     }
 
     @Bean
@@ -56,7 +55,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -103,8 +102,8 @@ public class SecurityConfig {
     SecurityFilterChain dbConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.securityMatcher(AntPathRequestMatcher.antMatcher("/h2-console/**"))
             .authorizeHttpRequests( auth -> {
-                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
-                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**")).permitAll();
+                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).hasRole("SUPER_ADMIN");
+                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**")).hasRole("SUPER_ADMIN");
             })
             .csrf(csrf -> {
                 csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"));
@@ -118,10 +117,12 @@ public class SecurityConfig {
     @Order(3)
     SecurityFilterChain configureSecurityAF(HttpSecurity http) throws Exception {
       http.authorizeHttpRequests(request -> request 
-        .requestMatchers("/login").permitAll()
+        .requestMatchers("/login","/assets/**","/favicon.ico").permitAll()
         .requestMatchers("/logout").authenticated()
-        .anyRequest().denyAll())
-        .httpBasic(Customizer.withDefaults());
+        .requestMatchers("/admin/**").hasRole("SUPER_ADMIN")
+        .anyRequest().authenticated())
+        .httpBasic(Customizer.withDefaults())
+        .formLogin(Customizer.withDefaults());
         return http.build();
     }
 }
