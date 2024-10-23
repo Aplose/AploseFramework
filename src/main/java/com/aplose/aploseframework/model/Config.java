@@ -21,8 +21,8 @@ public class Config {
     private Long longValue;
     private Float floatValue;
     private Double doubleValue;
-    private Instant instantValue;
     private Boolean booleanValue;
+    private Boolean isFrontAllowed=Boolean.FALSE;
     
     public Config(){}
 
@@ -44,11 +44,6 @@ public class Config {
     public Config(String configKey, Float floatValue) {
         this.configKey = configKey;
         this.floatValue = floatValue;
-    }
-
-    public Config(String configKey, Instant instantValue) {
-        this.configKey = configKey;
-        this.instantValue = instantValue;
     }
 
     public Config(String configKey, Double doubleValue) {
@@ -111,21 +106,20 @@ public class Config {
         this.doubleValue = doubleValue;
     }
 
-    
-    public Instant getInstantValue() {
-        return instantValue;
-    }
-
-    public void setInstantValue(Instant instantValue) {
-        this.instantValue = instantValue;
-    }
-
     public Boolean getBooleanValue() {
         return booleanValue;
     }
 
     public void setBooleanValue(Boolean booleanValue) {
         this.booleanValue = booleanValue;
+    }
+
+    public Boolean getIsFrontAllowed() {
+        return isFrontAllowed;
+    }
+
+    public void setIsFrontAllowed(Boolean isFrontAllowed) {
+        this.isFrontAllowed = isFrontAllowed;
     }
 
     

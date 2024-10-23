@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TranslationService {
     @Autowired
-    TranslationRepository translationRepository;
-    
+    TranslationRepository translationRepository;    
     public String getTranslationByLocaleCode(String locale, String code, String defaultMessage) {
         Translation translation = translationRepository.findByCodeAndLocale(code, locale);
         if(translation==null){
+            //TODO dev a dolibarr webservice to allow asking for translation
             translation = new Translation();
             translation.setCode(code);
             translation.setLocale(locale);
