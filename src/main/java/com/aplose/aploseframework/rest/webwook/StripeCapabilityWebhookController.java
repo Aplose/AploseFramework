@@ -74,7 +74,7 @@ public class StripeCapabilityWebhookController {
                         userAccount.setStripCardPaymentIsEnabled(false);
                     }
 
-                    userAccount = this._userAccountService.save(userAccount);
+                    userAccount = this._userAccountService.update(userAccount);
                 } 
                 catch (StripeException e) {
                     return ResponseEntity.badRequest().body("StripeException: " + e.getMessage());

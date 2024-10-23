@@ -1,5 +1,6 @@
 package com.aplose.aploseframework.service;
 
+import com.aplose.aploseframework.exception.EmailAllreadyExistException;
 import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
@@ -76,20 +77,18 @@ public class UserAccountService implements UserDetailsService{
     }
 
 
-    public UserAccount save(UserAccount userAccount){
-        try{
-            return this._userAccountRepository.save(userAccount);
+    public UserAccount create(UserAccount userAccount){
+        // si un UserAccount existe avec le même username (email):
+        if(this._userAccountRepository.findByUsername(userAccount.getUsername()) != null){
+            throw new EmailAllreadyExistException("This username (email address) allready exist.");
         }
-        catch(DataIntegrityViolationException e){
-            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
-                ConstraintViolationException constraintException = (ConstraintViolationException) e.getCause();
-                
-                if (constraintException.getConstraintName().equals("PUBLIC.CONSTRAINT_INDEX_9")) {
-                    throw new RegistrationException("This username allready exist.", e);
-                }
-            }
-            throw new RegistrationException("Error of data integrity.", e);
-        }
+        // sinon, créer UserAccount et le retourner
+        return this._userAccountRepository.save(userAccount);
+    }
+
+
+    public UserAccount update(UserAccount userAccount){
+        return this._userAccountRepository.save(userAccount);
     }
 
 

@@ -1,5 +1,6 @@
-package com.aplose.aploseframework.controller;
+package com.aplose.aploseframework.exceptionHandler;
 
+import com.aplose.aploseframework.exception.EmailAllreadyExistException;
 import com.aplose.aploseframework.exception.RegistrationException;
 import com.stripe.exception.StripeException;
 
@@ -60,7 +61,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleAuthenticationException(Exception ex) {
-        System.err.println("\n\nException:\n" );
+        System.err.println("\n\nAuthenticationException:\n" );
         ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( ex.getMessage());
     }
@@ -78,6 +79,15 @@ public class GlobalExceptionHandler {
         errorDetails.put("errorMessage", ex.getMessage());
         
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(errorDetails);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(EmailAllreadyExistException.class)
+    public ResponseEntity<String> handleEmailAllreadyExistException(Exception ex) {
+        System.err.println("\n\nEmailAllreadyExistException:\n" );
+        System.err.println("\n\nmessage:\n"+ex.getMessage() );
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body( ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

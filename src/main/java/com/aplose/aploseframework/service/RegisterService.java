@@ -71,7 +71,7 @@ public class RegisterService {
 
         person.getUserAccount().setLocale(new Locale(person.getAddress().getCountry().getCode()));
 
-        person.setUserAccount(this._userAccountService.save(person.getUserAccount()));
+        person.setUserAccount(this._userAccountService.create(person.getUserAccount()));
 
         person = this._personService.save(person);
 
@@ -133,7 +133,7 @@ public class RegisterService {
             userAccount.getLocale(),
             userAccount.getActivationCode(),
             userAccount.getUsername());
-        this._userAccountService.save(userAccount);
+        this._userAccountService.update(userAccount);
     }
     
 
@@ -166,7 +166,7 @@ public class RegisterService {
         // créé le ThirdParty, le Contact et le User
         this.createAndSetDolibarrAccounts(person);
 
-        this._userAccountService.save(userAccount);
+        this._userAccountService.update(userAccount);
         this._personService.save(person);
 
         if(person.getUserAccount().isProfessionnalAccount()){
@@ -179,7 +179,7 @@ public class RegisterService {
         
         userAccount.setEnabled(Boolean.TRUE);
 
-        this._userAccountService.save(userAccount);
+        this._userAccountService.update(userAccount);
         this._personService.save(person);
     }
 

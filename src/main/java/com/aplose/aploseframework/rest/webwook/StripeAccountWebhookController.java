@@ -84,8 +84,7 @@ public class StripeAccountWebhookController {
               }else{
                 userAccount.setStripCardPaymentIsEnabled(false);
               }
-              this._userAccountService.save(userAccount);
-
+              this._userAccountService.update(userAccount);
               break;
             }
 
@@ -99,7 +98,7 @@ public class StripeAccountWebhookController {
               try{
                 UserAccount userAccount = this._userAccountService.loadUserByUsername(this._stripeAccountService.getById(event.getAccount()).getEmail());
                 userAccount.setStripeApplicationIsAuthorized(true);
-                this._userAccountService.save(userAccount);
+                this._userAccountService.update(userAccount);
               }catch(StripeException e){
 
                 return ResponseEntity.badRequest().body("weebhook: account.application.authorized" + e.getMessage());

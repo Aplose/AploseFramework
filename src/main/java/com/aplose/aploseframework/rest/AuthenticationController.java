@@ -13,6 +13,7 @@ import com.aplose.aploseframework.service.AuthenticationService;
 import com.google.auth.oauth2.TokenVerifier.VerificationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,12 +51,14 @@ public class AuthenticationController {
 
     @PostMapping("/internal-login")
     public ResponseEntity<AuthResponseDTO> internalLogin(@RequestBody AuthRequestDTO loginRequest) {
-        return ResponseEntity.ok(
-            this._authenticationService.internalLogin(
+        AuthResponseDTO authResponseDTO = this._authenticationService.internalLogin(
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
-            )
         );
+        if(authResponseDTO == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(authResponseDTO);
     }
 
 

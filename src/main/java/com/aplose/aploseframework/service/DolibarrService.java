@@ -427,7 +427,7 @@ public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLin
         // Association de l'ID du devis à l'utilisateur
         userAccount.setDolibarrPendingProposalId(proposalId);
         // Sauvegarde de la mise à jour de l'utilisateur
-        this._userAccountService.save(userAccount);
+        this._userAccountService.update(userAccount);
     }
 
     try {
