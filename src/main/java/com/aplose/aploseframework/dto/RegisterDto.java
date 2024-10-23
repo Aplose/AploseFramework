@@ -4,6 +4,7 @@ import com.aplose.aploseframework.enums.AuthenticationTypeEnum;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * Used for registration and profile
@@ -16,6 +17,10 @@ public class RegisterDto {
     @Email(message = "Email is invalid")
     private String userAccountUsername; // email address ti copy in email field
 
+    @Pattern(
+        regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!?@#$%^&*+-]).{8,}$",
+        message = "Password must be at least 8 characters long, contain at least one digit, one lowercase letter, one uppercase letter, and one special character (!?@#$%^&*+-)"
+    )
     @NotNull(message = "Password cannot be null")
     private String userAccountPassword; 
 

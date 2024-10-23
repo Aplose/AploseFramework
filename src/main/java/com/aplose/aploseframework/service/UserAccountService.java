@@ -76,14 +76,15 @@ public class UserAccountService implements UserDetailsService{
         return this._userAccountRepository.findById(userAccountId).orElseThrow(() -> new EntityNotFoundException("UserAccount not found in database"));
     }
 
-
+    
     public UserAccount create(UserAccount userAccount){
-        // si un UserAccount existe avec le même username (email):
-        if(this._userAccountRepository.findByUsername(userAccount.getUsername()) != null){
-            throw new EmailAllreadyExistException("This username (email address) allready exist.");
+        // si aucun UserAccount n'existe avec le même username (email):
+        if(this._userAccountRepository.findByUsername(userAccount.getUsername()) == null){
+            // créer UserAccount et le retourner
+            return this._userAccountRepository.save(userAccount);
         }
-        // sinon, créer UserAccount et le retourner
-        return this._userAccountRepository.save(userAccount);
+        // sinon lever une exception
+        throw new EmailAllreadyExistException("This username (email address) allready exist.");
     }
 
 
