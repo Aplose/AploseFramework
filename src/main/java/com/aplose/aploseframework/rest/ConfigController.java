@@ -31,7 +31,12 @@ public class ConfigController {
             if(config.isEmpty()){
                 throw new ConfigRestrictedToBackendException("Config not found");
             }else{
-                throw new ConfigRestrictedToBackendException("Config not allowed in frontend");
+                throw new ConfigRestrictedToBackendException("Config "
+                +config.get().getStringValue()
+                +config.get().getIntegerValue()
+                +config.get().getLongValue()
+                +config.get().getConfigKey()
+                +" not allowed in frontend");
             }
         }
     }
