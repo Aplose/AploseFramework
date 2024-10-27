@@ -27,7 +27,7 @@ public class TranslationController {
     private ModelMapper modelMapper;
     
     @GetMapping
-    public String getTranslation(Locale locale, @RequestParam("code") String code, @RequestParam(required = false, value = "defaultMessage") String defaultMessage){
+    public TranslationDTO getTranslation(Locale locale, @RequestParam("code") String code, @RequestParam(required = false, value = "defaultMessage") String defaultMessage){
         return translationService.getTranslationByLocaleCode(locale.toString(), code, defaultMessage);
     }
     

@@ -1,5 +1,7 @@
 package com.aplose.aploseframework.dto;
 
+import com.aplose.aploseframework.model.Translation;
+
 /**
  *
  * @author oandrade
@@ -8,6 +10,15 @@ public class TranslationDTO {
     private String locale;
     private String code;
     private String message;
+
+
+    public TranslationDTO(){}
+
+    public TranslationDTO(Translation translation){
+        this.locale = translation.getLocale();
+        this.code = translation.getCode();
+        this.message = translation.getMessage();
+    }
 
     public String getLocale() {
         return locale;

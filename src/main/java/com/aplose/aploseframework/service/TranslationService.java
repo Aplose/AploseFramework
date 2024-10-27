@@ -1,5 +1,6 @@
 package com.aplose.aploseframework.service;
 
+import com.aplose.aploseframework.dto.TranslationDTO;
 import com.aplose.aploseframework.model.Translation;
 import com.aplose.aploseframework.repository.TranslationRepository;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class TranslationService {
     @Autowired
     TranslationRepository translationRepository;    
-    public String getTranslationByLocaleCode(String locale, String code, String defaultMessage) {
+    public TranslationDTO getTranslationByLocaleCode(String locale, String code, String defaultMessage) {
         Translation translation = translationRepository.findByCodeAndLocale(code, locale);
         if(translation==null){
             //TODO dev a dolibarr webservice to allow asking for translation
@@ -24,7 +25,7 @@ public class TranslationService {
             translation.setMessage(defaultMessage);
             translationRepository.save(translation);
         }
-        return translation.getMessage();
+        return new TranslationDTO(translation);
     }
     public List<Translation> getAllTranslationByLocale(String locale){
         return translationRepository.findByLocale(locale);
