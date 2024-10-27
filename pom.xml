@@ -8,9 +8,39 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.5</version>    
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <name>AploseFramework</name>
+    <description>AploseFramework is a backend framework designed to simplify and accelerate the development of connected mobile applications. This framework, based on **Spring**, offers smooth integration with various services and ERPs such as **Dolibarr**, as well as payment solutions like **Stripe**, authentication (Google, internal, Dolibarr ), and videoconferencing with **Vizulive**.</description>
+    <url>https://github.com/Aplose/AploseFramework</url>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>oandradesanchez</id>
+            <name>Olivier Andrade Sanchez</name>
+            <email>oandrade@aplose.fr</email>
+            <organization>Aplose</organization>
+            <organizationUrl>https://aplose.fr</organizationUrl>
+        </developer>
+        <developer>
+            <id>toccoflorian</id>
+            <name>Florian Tocco</name>
+            <email>ftocco@aplose.fr</email>
+            <organization>Aplose</organization>
+            <organizationUrl>https://aplose.fr</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/Aplose/AploseFramework.git</connection>
+        <developerConnection>scm:git:https://github.com/Aplose/AploseFramework.git</developerConnection>
+        <url>https://github.com/Aplose/AploseFramework</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,40 +102,23 @@
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>25.4.0</version>
+            <version>27.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency> -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency> -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
         </dependency>
-         <!-- 
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-        </dependency> -->
         <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -133,7 +146,7 @@
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-dependency-plugin</artifactId>
-      <!-- <version>3.3.0</version> Utilisez la dernière version disponible -->
+      <version>3.8.1</version>
       <executions>
         <execution>
           <goals>

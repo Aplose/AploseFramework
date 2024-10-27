@@ -8,6 +8,9 @@ import com.aplose.aploseframework.filter.JwtAuthFilter;
 import com.aplose.aploseframework.security.DolibarrAuthenticationProvier;
 
 import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +39,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    static {
+        logger.info("Classe SecurityConfig chargée");
+    }
+
     
     @Autowired
     @Lazy
@@ -75,8 +83,11 @@ public class SecurityConfig {
     @Order(1)
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf -> csrf.disable())
-            .securityMatcher("/api/**")
+            .csrf(csrf -> {
+                csrf.disable();
+                logger.info("CSRF disabled for API");
+            })
+            .securityMatcher( "/api/**")
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/authentication/**", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/google-extract-claims", "POST")).permitAll();
@@ -88,8 +99,11 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/ping", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/translation/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/config/**", "GET")).permitAll();
+                logger.info("Config API allowed");
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "GET")).permitAll();
+                logger.info("Dolibarr API allowed");
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "POST")).permitAll();
+                logger.info("Dolibarr POST API allowed");
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

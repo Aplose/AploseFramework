@@ -10,8 +10,8 @@ package com.aplose.aploseframework.exception;
  */
 public class ConfigRestrictedToBackendException extends Exception {
 
-    public ConfigRestrictedToBackendException(String config_not_found) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ConfigRestrictedToBackendException(String message) {
+        super(message);
     }
     
 }
