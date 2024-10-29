@@ -12,7 +12,9 @@ import com.aplose.aploseframework.service.DolibarrService;
 import com.aplose.aploseframework.tool.TreeBuilder;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +67,7 @@ public class DolibarrController {
     }
     
     /*
-     * Ajout de produit (Product) au devis (Proposal) de l'utilisateur connecté 
+     * Ajout de produit au devis (Proposal) de l'utilisateur connecté 
      */
     @PostMapping("/proposals/line")
     public Integer addProposalLine(@AuthenticationPrincipal UserAccount userAccount, @RequestBody ProposalLineDTO proposalLineDTO){
@@ -79,15 +81,21 @@ public class DolibarrController {
         // assigner le type de produit (0=service, 1=produit)
         proposalLine.setProduct_type(proposalLineDTO.getProduct_type());
 
-        // ajouter une ligne (ProposalLine) au devis (Proposal)
+        // ajouter une ligne (ProposalLine) au devis (Proposal) et retourner l'id
         return this.dolibarrService.addProposalLine(
             userAccount,
             proposalLine
         );
     }
 
-    @GetMapping("test")
-    public Proposal[] test(){
-        return (Proposal[]) dolibarrService.getAll(Proposal.NAME, null);
+    /*
+     * Récupérer le devis (Proposal) en cours
+     */
+    @GetMapping("/proposal")
+    public ResponseEntity<Proposal> getPendingProposal(@AuthenticationPrincipal UserAccount userAccount){
+        if(userAccount.getDolibarrPendingProposalId() == null){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok((Proposal) dolibarrService.getById(Proposal.NAME, userAccount.getDolibarrPendingProposalId()));
     }
 }

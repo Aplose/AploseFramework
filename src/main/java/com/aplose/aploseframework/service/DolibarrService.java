@@ -399,51 +399,69 @@ public class DolibarrService {
 
 
 
-/*
- * Ajoute une ligne à un devis (Proposal) ou crée un nouveau devis si nécessaire.
- */
-public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLine){
+    /*
+    * Ajoute une ligne à un devis (Proposal) ou crée un nouveau devis si nécessaire.
+    */
+    public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLine){
 
-    Integer proposalId;
-    try{
-        // Récupération de l'ID du devis en cours de l'utilisateur
-        proposalId = userAccount.getDolibarrPendingProposalId();
-    }
-    catch(NullPointerException e){
-        proposalId = null;
+        Integer proposalId;
+        try{
+            // Récupération de l'ID du devis en cours de l'utilisateur
+            proposalId = userAccount.getDolibarrPendingProposalId();
+        }
+        catch(NullPointerException e){
+            proposalId = null;
+        }
+
+
+        // Si l'utilisateur n'a pas encore de devis associé
+        if(proposalId == null){
+            // Création d'un nouveau devis (Proposal)
+            Proposal proposal = new Proposal();
+            // Association du tiers (ThirdParty) au devis
+            proposal.setSocid(userAccount.getDolibarrThirdPartyId());
+            // Assignation de la date de création au devis
+            proposal.setDatep(Instant.now().toString());
+            // Enregistrement du nouveau devis dans Dolibarr et récupération de son ID
+            proposalId = this.createDolibarrObject(proposal);
+            // Association de l'ID du devis à l'utilisateur
+            userAccount.setDolibarrPendingProposalId(proposalId);
+            // Sauvegarde de la mise à jour de l'utilisateur
+            this._userAccountService.update(userAccount);
+        }
+
+        try {
+            // Envoi de la requête pour ajouter une ligne au devis et retour de l'ID de la nouvelle ligne
+            return this.restClient.post()
+                .uri(dolibarrApiUrl + "/proposals/" + proposalId + "/line?DOLAPIKEY=" + dolibarrUserApiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(proposalLine)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(Integer.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+            // Retourne 0 en cas d'échec de la requête
+            return 0;
+        }
     }
 
 
-    // Si l'utilisateur n'a pas encore de devis associé
-    if(proposalId == null){
-        // Création d'un nouveau devis (Proposal)
-        Proposal proposal = new Proposal();
-        // Association du tiers (ThirdParty) au devis
-        proposal.setSocid(userAccount.getDolibarrThirdPartyId());
-        // Assignation de la date de création au devis
-        proposal.setDatep(Instant.now().toString());
-        // Enregistrement du nouveau devis dans Dolibarr et récupération de son ID
-        proposalId = this.createDolibarrObject(proposal);
-        // Association de l'ID du devis à l'utilisateur
-        userAccount.setDolibarrPendingProposalId(proposalId);
-        // Sauvegarde de la mise à jour de l'utilisateur
-        this._userAccountService.update(userAccount);
-    }
 
-    try {
-        // Envoi de la requête pour ajouter une ligne au devis et retour de l'ID de la nouvelle ligne
-        return this.restClient.post()
-            .uri(dolibarrApiUrl + "/proposals/" + proposalId + "/line?DOLAPIKEY=" + dolibarrUserApiKey)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(proposalLine)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(Integer.class);
-    } catch (RestClientException e) {
-        e.printStackTrace();
-        // Retourne 0 en cas d'échec de la requête
-        return 0;
+    /**
+     * Obtenir le devis en cours et récupérer des information des produits contenus dans le devis
+     */
+    public Proposal getProposalById(Integer proposalId){
+        Proposal proposal = (Proposal)this.getById(Proposal.NAME, proposalId);
+
+        proposal.getLines().forEach((ProposalLine line) -> {
+            Product product = (Product)this.getById(Product.NAME, line.getFk_product());
+            Category[] category = this.getCategoriesForProduct(product.getId().toString());
+            line.setProductLabel(product.getLabel());
+            line.setProductImageSrc(category[0].getPhoto());
+        });
+
+        return proposal;
     }
-}
 
 }

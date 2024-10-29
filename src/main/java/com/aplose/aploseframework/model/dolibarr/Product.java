@@ -12,9 +12,12 @@ import java.util.HashMap;
  * @author oandrade
  */
 public class Product extends DolibarrObject {
+    
     public Product(){
         endPoint="/products";
     }
+
+    public final static String NAME = "products";
     HashMap<String, Object> array_options=new HashMap<>();
     @JsonIgnore
     Multiprices multiprices;
