@@ -2,19 +2,20 @@ package com.aplose.aploseframework.tool.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.service.ConfigService;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import javax.crypto.SecretKey;
+import java.time.Instant;
 
 @Component
 public class JwtTokenTool {
@@ -29,13 +30,18 @@ public class JwtTokenTool {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
+    private Key getSigningKey() {
+        byte[] keyBytes = this._configService.getStringConfig("aplose.framework.security.jwt.secretKey").getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-                .signWith(SignatureAlgorithm.HS512, this._configService.getStringConfig("aplose.framework.security.jwt.secretKey"))
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusSeconds(60 * 60 * 10)))
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -53,10 +59,12 @@ public class JwtTokenTool {
 
     private Claims extractAllClaims(String token) {
         Claims claims;
-        try{
-            claims = Jwts.parser().setSigningKey(this._configService.getStringConfig("aplose.framework.security.jwt.secretKey")).parseClaimsJws(token).getBody();
-        }
-        catch(Exception e){
+        try {
+            claims = Jwts.parser()
+                    .verifyWith((SecretKey)getSigningKey()).build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch(Exception e) {
             return null;
         }
         return claims;

@@ -13,15 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aplose.aploseframework.dto.stripe.CreateCheckoutDto;
 import com.aplose.aploseframework.model.UserAccount;
-import com.aplose.aploseframework.model.dolibarr.ThirdParty;
-import com.aplose.aploseframework.service.DolibarrService;
 import com.aplose.aploseframework.service.PersonService;
 import com.aplose.aploseframework.service.ServiceService;
 import com.aplose.aploseframework.service.stripe.StripeAccountService;
 import com.aplose.aploseframework.service.stripe.StripeCheckoutService;
 import com.aplose.aploseframework.service.stripe.StripeCustomerService;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Account;
 
 @RestController
 @RequestMapping("/api/stripe")

@@ -31,6 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  *
@@ -39,16 +42,27 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-    static {
-        logger.info("Classe SecurityConfig chargée");
-    }
-
     
     @Autowired
     @Lazy
     UserDetailsService userDetailsService;  
 
+    private static CorsConfigurationSource corsConfigurationSource;
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        if(corsConfigurationSource == null){
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(Arrays.asList("*")); // À adapter selon vos besoins
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(Arrays.asList("*"));
+            configuration.setExposedHeaders(Arrays.asList("Authorization"));
+            configuration.setAllowCredentials(false);            
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/api/**", configuration);
+            corsConfigurationSource = source;
+        }
+        return corsConfigurationSource;
+    }
 
     @Bean
     public JwtAuthFilter jwtAuthFilter() {
@@ -83,9 +97,9 @@ public class SecurityConfig {
     @Order(1)
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(csrf -> {
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> {
                 csrf.disable();
-                logger.info("CSRF disabled for API");
             })
             .securityMatcher( "/api/**")
             .authorizeHttpRequests(auth -> {
@@ -97,13 +111,11 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dictionnary/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/account-activation/*", "PATCH")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/ping", "GET")).permitAll();
-                auth.requestMatchers(new AntPathRequestMatcher("/api/translation/**", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/translation", "GET")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/translation/all", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/config/**", "GET")).permitAll();
-                logger.info("Config API allowed");
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "GET")).permitAll();
-                logger.info("Dolibarr API allowed");
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "POST")).permitAll();
-                logger.info("Dolibarr POST API allowed");
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

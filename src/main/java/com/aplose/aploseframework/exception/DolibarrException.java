@@ -4,9 +4,6 @@
  */
 package com.aplose.aploseframework.exception;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-
 /**
  *
  * @author oandrade

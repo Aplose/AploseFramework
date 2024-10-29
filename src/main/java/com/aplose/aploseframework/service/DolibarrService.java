@@ -43,6 +43,7 @@ import com.aplose.aploseframework.model.dolibarr.User;
 import com.aplose.aploseframework.model.dolibarr.Warehouse;
 import jakarta.annotation.PostConstruct;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.Instant;
@@ -382,7 +383,7 @@ public class DolibarrService {
     }
     
     public DocumentFile getFile(String level1Name,String relativeName, String modulePart){
-        String file = URLEncoder.encode(level1Name)+"/"+URLEncoder.encode(relativeName);        
+        String file = URLEncoder.encode(level1Name, StandardCharsets.UTF_8)+"/"+URLEncoder.encode(relativeName, StandardCharsets.UTF_8);        
         String url = dolibarrApiUrl+"/documents/download?DOLAPIKEY="+dolibarrUserApiKey+"&modulepart="+modulePart+"&original_file="+file;
         DocumentFile documentFile = new DocumentFile();        
         try{

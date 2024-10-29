@@ -4,8 +4,6 @@
  */
 package com.aplose.aploseframework.dto;
 
-import java.util.Date;
-
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.security.Token;
 

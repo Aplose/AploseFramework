@@ -1,10 +1,6 @@
 package com.aplose.aploseframework.dto;
 
 import java.time.Duration;
-import java.util.List;
-
-import com.aplose.aploseframework.model.Address;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 

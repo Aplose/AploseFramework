@@ -18,12 +18,15 @@ public class TranslationService {
     public TranslationDTO getTranslationByLocaleCode(String locale, String code, String defaultMessage) {
         Translation translation = translationRepository.findByCodeAndLocale(code, locale);
         if(translation==null){
-            //TODO dev a dolibarr webservice to allow asking for translation
             translation = new Translation();
             translation.setCode(code);
             translation.setLocale(locale);
             translation.setMessage(defaultMessage);
-            translationRepository.save(translation);
+            try {
+                translationRepository.save(translation);
+            } catch (Exception e) {
+                System.out.println("Error saving translation: " + e.getMessage());
+            }
         }
         return new TranslationDTO(translation);
     }

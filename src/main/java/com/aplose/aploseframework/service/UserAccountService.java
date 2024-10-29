@@ -1,7 +1,6 @@
 package com.aplose.aploseframework.service;
 
 import com.aplose.aploseframework.exception.EmailAllreadyExistException;
-import com.aplose.aploseframework.exception.RegistrationException;
 import com.aplose.aploseframework.model.Role;
 import com.aplose.aploseframework.model.RoleEnum;
 import com.aplose.aploseframework.model.UserAccount;
@@ -11,9 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
