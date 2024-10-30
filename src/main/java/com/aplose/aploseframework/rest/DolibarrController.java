@@ -1,6 +1,9 @@
 package com.aplose.aploseframework.rest;
 
-import com.aplose.aploseframework.dto.ProposalLineDTO;
+import com.aplose.aploseframework.dto.proposal.ProposalLineDTO;
+import com.aplose.aploseframework.dto.proposal.UpdateProposalLineDTO;
+import com.aplose.aploseframework.exception.DolibarrException;
+import com.aplose.aploseframework.exception.ProposalLineNotUpdatedException;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dolibarr.Category;
 import com.aplose.aploseframework.model.dolibarr.Document;
@@ -17,9 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,7 +72,8 @@ public class DolibarrController {
     }
     
     /*
-     * Ajout de produit au devis (Proposal) de l'utilisateur connecté 
+     * Ajout de produit au devis (Proposal) de l'utilisateur connecté
+     * Créer le devis en cours si besoin
      */
     @PostMapping("/proposals/line")
     public Integer addProposalLine(@AuthenticationPrincipal UserAccount userAccount, @RequestBody ProposalLineDTO proposalLineDTO){
@@ -81,11 +87,16 @@ public class DolibarrController {
         // assigner le type de produit (0=service, 1=produit)
         proposalLine.setProduct_type(proposalLineDTO.getProduct_type());
 
-        // ajouter une ligne (ProposalLine) au devis (Proposal) et retourner l'id
-        return this.dolibarrService.addProposalLine(
-            userAccount,
-            proposalLine
-        );
+        try{
+            // ajouter une ligne (ProposalLine) au devis (Proposal) et retourner l'id
+            return this.dolibarrService.addProposalLine(
+                userAccount,
+                proposalLine
+                );
+        }catch(DolibarrException e){
+            // Retourne 0 en cas d'échec de la requête
+            return 0;
+        }
     }
 
     /*
@@ -97,5 +108,23 @@ public class DolibarrController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok((Proposal) dolibarrService.getById(Proposal.NAME, userAccount.getDolibarrPendingProposalId()));
+    }
+
+
+    /*
+     * Mettre à jour une ligne du devis en cours
+     */
+    @PutMapping("/proposal/lines/{lineid}")
+    public void updateDolibarrObject(@AuthenticationPrincipal UserAccount userAccount, @PathVariable String lineid, @RequestBody ProposalLine proposalLine){
+        this.dolibarrService.updateProposalLine(userAccount.getDolibarrPendingProposalId(), proposalLine);
+    }
+
+
+    /*
+     * Supprimer une ligne du devis en cours
+     */
+    @DeleteMapping("/proposal/lines/{lineid}")
+    public void deleteProposalLine(@AuthenticationPrincipal UserAccount userAccount, @PathVariable String lineid){
+        this.dolibarrService.deleteProposalLine(userAccount.getDolibarrPendingProposalId(), lineid);
     }
 }

@@ -1,4 +1,4 @@
-package com.aplose.aploseframework.dto;
+package com.aplose.aploseframework.dto.proposal;
 
 
 public class ProposalLineDTO {
