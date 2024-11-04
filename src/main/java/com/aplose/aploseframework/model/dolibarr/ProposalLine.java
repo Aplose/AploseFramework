@@ -20,6 +20,7 @@ public class ProposalLine {
     private BigDecimal multicurrency_total_ttc;    // Total TTC en devise
     private Integer product_type;   // type: 0=service; 1=product
     private String libelle; // reference du produit ou service 
+    private Float tva_tx;
 
     // les propriété en dessous ne font pas partie de Dolibarr
     private String productImageSrc;
@@ -143,6 +144,12 @@ public class ProposalLine {
     }
     public void setProductLabel(String productLabel) {
         this.productLabel = productLabel;
+    }
+    public Float getTva_tx() {
+        return tva_tx;
+    }
+    public void setTva_tx(Float tva_tx) {
+        this.tva_tx = tva_tx;
     }
 
 

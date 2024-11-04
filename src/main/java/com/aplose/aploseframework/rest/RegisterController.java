@@ -87,7 +87,7 @@ public class RegisterController {
             return ResponseEntity.status(HttpStatus.GONE).body("The activation code is expired, a new code has been re-sent");
         }
         this._registerService.activateAccount(userAccount);
-        return ResponseEntity.ok().body("Activation successfull !");
+        return ResponseEntity.ok("Activation successfull !");
     }    
 
 
@@ -97,7 +97,6 @@ public class RegisterController {
         try{
             claims = this._googleService.getUserClaimsFromGoogleToken(googleToken);
         }catch(Exception e){
-            System.out.println("\n\n\n" + e.getMessage() + "\n\n");
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         return ResponseEntity.ok(claims);

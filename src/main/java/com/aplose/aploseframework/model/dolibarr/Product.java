@@ -5,6 +5,8 @@
 package com.aplose.aploseframework.model.dolibarr;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -31,6 +33,7 @@ public class Product extends DolibarrObject {
     Multiprices multiprices_min_ttc;
     @JsonIgnore
     Multiprices multiprices_tva_tx;
+    BigDecimal price;
     Float tva_tx;
     Float remise_percent;
 
@@ -106,5 +109,14 @@ public class Product extends DolibarrObject {
     public void setRemise_percent(Float remise_percent) {
         this.remise_percent = remise_percent;
     }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     
 }

@@ -5,6 +5,7 @@ import com.aplose.aploseframework.dto.proposal.ProposalLineDTO;
 import com.aplose.aploseframework.dto.proposal.UpdateProposalLineDTO;
 import com.aplose.aploseframework.exception.DolibarrException;
 import com.aplose.aploseframework.exception.ProposalLineNotUpdatedException;
+import com.aplose.aploseframework.exception.ProposalValidationException;
 import com.aplose.aploseframework.model.UserAccount;
 import com.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
 import com.aplose.aploseframework.model.dictionnary.Civility;
@@ -402,6 +403,25 @@ public class DolibarrService {
     }
 
 
+    /*
+     * Créer un objet ProposalLine correctement
+     */
+    public ProposalLine createProposalLine(ProposalLineDTO proposalLineDTO){
+        Product product = (Product)this.getById(Product.NAME, proposalLineDTO.getProductId());
+        // création d'un ProposalLine
+        ProposalLine proposalLine = new ProposalLine();
+        // assigner la quantité
+        proposalLine.setQty(proposalLineDTO.getQuantity());
+        // assigner l'id du produit
+        proposalLine.setFk_product(proposalLineDTO.getProductId());
+        // assigner le type de produit (0=service, 1=produit)
+        proposalLine.setProduct_type(proposalLineDTO.getProduct_type());
+        proposalLine.setSubprice(product.getPrice());
+        proposalLine.setTva_tx(product.getTva_tx());
+
+        return proposalLine;
+    }
+
 
     /*
     * Ajoute une ligne à un devis (Proposal) ou crée un nouveau devis si nécessaire.
@@ -470,12 +490,12 @@ public class DolibarrService {
      * Supprimer une ligne du devis en cours 
      */
     public void deleteProposalLine(Integer proposalId, String proposalLineId){
-        Integer proposalid = this.restClient.delete()
+        Integer proposalIdResult = this.restClient.delete()
         .uri(dolibarrApiUrl+"/proposals/"+proposalId+"/lines/"+proposalLineId+"?DOLAPIKEY="+dolibarrUserApiKey)
         .retrieve()
         .body(Proposal.class)
         .getId();
-        if(proposalId < 1){
+        if(proposalIdResult < 1){
             throw new ProposalLineNotUpdatedException("Error during the proposal line deletation, proposal line not deleted.");
         }
     }
@@ -497,4 +517,23 @@ public class DolibarrService {
         return proposal;
     }
 
+
+    /*
+     * Valider le devis (brouillon) en cours
+     */
+    public Integer validatePendingProposal(UserAccount userAccount){
+        Proposal proposal = this.restClient.post()
+        .uri(dolibarrApiUrl+"/proposals/"+userAccount.getDolibarrPendingProposalId()+"/validate?DOLAPIKEY="+dolibarrUserApiKey)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Map.of("notrigger", 0))
+        .retrieve()
+        .body(Proposal.class)
+        ;
+        if(proposal == null || proposal.getId() < 1){
+            throw new ProposalValidationException("Error during the Dolibarr request of proposal validation");
+        }
+        userAccount.setDolibarrPendingProposalId(null);
+        this._userAccountService.update(userAccount);
+        return proposal.getId();
+    }
 }
