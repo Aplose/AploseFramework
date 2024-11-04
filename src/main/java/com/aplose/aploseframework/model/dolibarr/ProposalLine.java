@@ -3,12 +3,7 @@ import java.math.BigDecimal;
 
 public class ProposalLine {
 
-    public Integer getProduct_type() {
-        return product_type;
-    }
-    public void setProduct_type(Integer product_type) {
-        this.product_type = product_type;
-    }
+    private String rowid;
     private Integer fk_propal; // ID de la proposition
     private String product_label;  // Optionnel, si tu as un label spécifique
     private Integer fk_product;     // ID du produit, ou null si ce n'est pas lié à un produit
@@ -24,6 +19,12 @@ public class ProposalLine {
     private BigDecimal multicurrency_total_tva;   // Total TVA en devise
     private BigDecimal multicurrency_total_ttc;    // Total TTC en devise
     private Integer product_type;   // type: 0=service; 1=product
+    private String libelle; // reference du produit ou service 
+    private Float tva_tx;
+
+    // les propriété en dessous ne font pas partie de Dolibarr
+    private String productImageSrc;
+    private String productLabel;
 
 
 
@@ -114,7 +115,42 @@ public class ProposalLine {
         this.multicurrency_total_ttc = multicurrency_total_ttc;
     }
 
-
+    public Integer getProduct_type() {
+        return product_type;
+    }
+    public void setProduct_type(Integer product_type) {
+        this.product_type = product_type;
+    }
+    public String getRowid() {
+        return rowid;
+    }
+    public void setRowid(String rowid) {
+        this.rowid = rowid;
+    }
+    public String getLibelle() {
+        return libelle;
+    }
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
+    public String getProductImageSrc() {
+        return productImageSrc;
+    }
+    public void setProductImageSrc(String productImageSrc) {
+        this.productImageSrc = productImageSrc;
+    }
+    public String getProductLabel() {
+        return productLabel;
+    }
+    public void setProductLabel(String productLabel) {
+        this.productLabel = productLabel;
+    }
+    public Float getTva_tx() {
+        return tva_tx;
+    }
+    public void setTva_tx(Float tva_tx) {
+        this.tva_tx = tva_tx;
+    }
 
 
     

@@ -103,7 +103,6 @@ public class internalLoginTest {
         AuthResponseDTO response = this._authenticationService.internalLogin(wrongUsername, defaultNonEncodedPassword);
         // ASSERT
         // la méthode retourne null lorsque les identifiants ne sont pas correctes
-        System.err.println("\n\n response: "+ response + "\n");
         assertNull(response);
     }
     
