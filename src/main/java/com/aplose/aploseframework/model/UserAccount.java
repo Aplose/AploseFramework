@@ -52,6 +52,7 @@ public class UserAccount implements UserDetails {
     private String companyName;
     private String activationCode;
     private Instant activationCodeInstant;
+    @JsonIgnore
     @OneToOne(mappedBy = "userAccount", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Person person;
     @ManyToMany(fetch = FetchType.EAGER)
