@@ -169,7 +169,7 @@ public class RegisterService {
         this._userAccountService.update(userAccount);
         this._personService.save(person);
 
-        if(person.getUserAccount().isProfessionnalAccount()){
+        if(this._configService.getStringConfig("stripe.api.key") != "" && person.getUserAccount().isProfessionnalAccount()){
             // créer le compte connecté Stripe
             this._stripeAccountService.createLinkedAccount(person);
 

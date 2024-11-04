@@ -6,6 +6,7 @@ package com.aplose.aploseframework.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -50,6 +52,8 @@ public class UserAccount implements UserDetails {
     private String companyName;
     private String activationCode;
     private Instant activationCodeInstant;
+    @OneToOne(mappedBy = "userAccount", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Person person;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
@@ -280,6 +284,14 @@ public class UserAccount implements UserDetails {
 
     public void setDolibarrPendingProposalId(Integer dolibarrPendingProposalId) {
         this.dolibarrPendingProposalId = dolibarrPendingProposalId;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     
