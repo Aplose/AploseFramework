@@ -182,10 +182,10 @@ public class RegisterService {
             this._stripeCustomerService.createCustomer(person).getId();
         }
         
-        userAccount.setEnabled(Boolean.TRUE);
+        // userAccount.setEnabled(Boolean.TRUE);
 
-        this._userAccountService.update(userAccount);
-        this._personService.save(person);
+        // this._userAccountService.update(userAccount);
+        // this._personService.save(person);
     }
 
 
