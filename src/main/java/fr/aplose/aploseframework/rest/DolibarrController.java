@@ -38,34 +38,38 @@ public class DolibarrController {
     @Autowired
     DolibarrService dolibarrService;
     @GetMapping("/getAll/{name}")
-    public DolibarrObject[] getAll(@PathVariable("name") String name,@RequestParam(required = false) Map<String,String> params){        
+    public DolibarrObject[] getAll(@PathVariable("name") String name,
+            @RequestParam(required = false) Map<String, String> params) {
         return dolibarrService.getAll(name, params);
     }
     /**
      * Get file of a module
      */
-    @PostMapping(value="/document/download",produces = MediaType.APPLICATION_JSON_VALUE)
-    public DocumentFile getFile(@RequestParam String modulePart, @RequestBody Document document){
-        return dolibarrService.getFile(document.getLevel1name(),document.getRelativename(), modulePart);
+    @PostMapping(value = "/document/download", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DocumentFile getFile(@RequestParam String modulePart, @RequestBody Document document) {
+        return dolibarrService.getFile(document.getLevel1name(), document.getRelativename(), modulePart);
     }
-    
-    
+
     @GetMapping("/category")
-    public Category[] getCategoryTreeForType(@RequestParam("type") String type,@RequestParam Map<String,String> params){
+    public Category[] getCategoryTreeForType(@RequestParam("type") String type,
+            @RequestParam Map<String, String> params) {
         Category[] categories = dolibarrService.getAllCategories(type, params);
         categories = TreeBuilder.getCategoryTree(categories);
         return categories;
     }
+
     @GetMapping("/category/{idCat}/objects")
-    public DolibarrObject[] getAllObjectsForCategory(@PathVariable("idCat") String idCat,@RequestParam("type") String type){
-       return dolibarrService.getAllObjectsForCategory(idCat, type);
+    public DolibarrObject[] getAllObjectsForCategory(@PathVariable("idCat") String idCat,
+            @RequestParam("type") String type) {
+        return dolibarrService.getAllObjectsForCategory(idCat, type);
     }
+
     @GetMapping("/product/{id}/category")
-    public Category[] getCategoryForProduct(@PathVariable("id") String id){
+    public Category[] getCategoryForProduct(@PathVariable("id") String id) {
         Category[] categories = dolibarrService.getCategoriesForProduct(id);
         return categories;
     }
-    
+
     /*
      * Ajout de produit au devis (Proposal) de l'utilisateur connecté
      * Créer le devis en cours si besoin

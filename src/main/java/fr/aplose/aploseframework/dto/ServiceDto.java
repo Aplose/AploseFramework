@@ -11,7 +11,6 @@ public class ServiceDto {
     @NotNull(message = "name cannot be null")
     private String name;
     @NotNull(message = "description cannot be null")
-    @Size(min = 80, message = "minimum 80 caracters are required")
     private String description;
     @NotNull(message = "duration cannot be null")
     private Duration duration;
