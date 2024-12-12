@@ -7,13 +7,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
+import org.springframework.core.ParameterizedTypeReference;
 
 import fr.aplose.aploseframework.dto.ProposalLineDTO;
 import fr.aplose.aploseframework.exception.DolibarrException;
@@ -59,6 +68,7 @@ import fr.aplose.aploseframework.model.dolibarr.ThirdParty;
 import fr.aplose.aploseframework.model.dolibarr.Ticket;
 import fr.aplose.aploseframework.model.dolibarr.User;
 import fr.aplose.aploseframework.model.dolibarr.Warehouse;
+import fr.aplose.aploseframework.model.dolibarr.DolibarrPaginatedResponse;
 
 /**
  *
@@ -237,22 +247,53 @@ public class DolibarrService {
         }
         return result;
     }
-    public DolibarrObject[] getAllObjectsForCategory(String idCat, String type){
-        Map<String,String> params = new HashMap<>();
-        params.put("type", type);
-        String url = dolibarrApiUrl+"/categories/"+idCat+"/objects?DOLAPIKEY="+dolibarrUserApiKey+"&limit=0&type="+type;
-        DolibarrObject[] result = new DolibarrObject[0];
+    public Page<DolibarrObject> getAllObjectsForCategory(String idCat, String type, PageRequest pageRequest) {
+        String url = "";
+        if(type.equals("product")){
+            url = dolibarrApiUrl + "/products?DOLAPIKEY=" + dolibarrUserApiKey 
+                + "&type=" + type 
+                + "&category=" + idCat
+                + "&limit=" + pageRequest.getPageSize() 
+                + "&page=" + pageRequest.getPageNumber()
+                + "&pagination_data=1";
+        } else {
+            url = dolibarrApiUrl + "/categories/" + idCat + "/objects?DOLAPIKEY=" + dolibarrUserApiKey 
+                + "&type=" + type 
+                + "&limit=" + pageRequest.getPageSize() 
+                + "&page=" + pageRequest.getPageNumber()
+                + "&pagination_data=1";
+        }
+
         try {
-            result = restClient.get()
-                    .uri(url)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .body(dolibarrObjectArrayTypes.get(type));
+            Class<? extends DolibarrObject> objectType = dolibarrObjectTypes.get(type);
+            ParameterizedTypeReference<DolibarrPaginatedResponse<? extends DolibarrObject>> responseType = 
+                ParameterizedTypeReference.forType(
+                    TypeFactory.defaultInstance().constructParametricType(
+                        DolibarrPaginatedResponse.class,
+                        objectType
+                    )
+                );
+
+            DolibarrPaginatedResponse<? extends DolibarrObject> response = restClient.get()
+                .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(responseType);
+
+            if (response != null && response.getData() != null) {
+                return new PageImpl<>(
+                    Arrays.asList(response.getData()),
+                    pageRequest,
+                    response.getPagination().getTotal()
+                );
+            }
+            
+            return new PageImpl<>(Collections.emptyList(), pageRequest, 0);
         } catch (RestClientException rce) {
             rce.printStackTrace();
-            System.out.println("No objects of type "+type+" for category "+idCat);
+            System.out.println("No objects of type " + type + " for category " + idCat);
+            return new PageImpl<>(Collections.emptyList(), pageRequest, 0);
         }
-        return result;
     }
     //PRODUCTS
     public Category[] getCategoriesForProduct(String id) {

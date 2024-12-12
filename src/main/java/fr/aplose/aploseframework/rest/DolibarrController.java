@@ -12,7 +12,10 @@ import fr.aplose.aploseframework.service.DolibarrService;
 import fr.aplose.aploseframework.tool.TreeBuilder;
 import java.util.Map;
 import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -59,9 +62,9 @@ public class DolibarrController {
     }
 
     @GetMapping("/category/{idCat}/objects")
-    public DolibarrObject[] getAllObjectsForCategory(@PathVariable("idCat") String idCat,
-            @RequestParam("type") String type) {
-        return dolibarrService.getAllObjectsForCategory(idCat, type);
+    public Page<DolibarrObject> getAllObjectsForCategory(@PathVariable("idCat") String idCat,
+            @RequestParam("type") String type, @RequestParam("page") int page, @RequestParam("size") int size) {
+        return dolibarrService.getAllObjectsForCategory(idCat, type, PageRequest.of(page, size));
     }
 
     @GetMapping("/product/{id}/category")
