@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Proposal extends DolibarrObject {
     
     public final static String NAME = "proposals";
+    private String ref_client; // ref du client
     private Integer socid;  // id du ThirdParty
     private String datec; // date de création
     private String datep; // proposal date
@@ -33,6 +34,14 @@ public class Proposal extends DolibarrObject {
 
     public void setSocid(Integer socid) {
         this.socid = socid;
+    }
+
+    public String getRef_client() {
+        return ref_client;
+    }
+
+    public void setRef_client(String ref_client) {
+        this.ref_client = ref_client;
     }
 
     public String getDatec() {
