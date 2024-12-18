@@ -128,7 +128,7 @@ public class SecurityConfig {
     SecurityFilterChain dbConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.securityMatcher(AntPathRequestMatcher.antMatcher("/h2-console/**"))
             .authorizeHttpRequests( auth -> {
-                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).hasRole("SUPER_ADMIN");
+                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
                 auth.requestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**")).hasRole("SUPER_ADMIN");
             })
             .csrf(csrf -> {
