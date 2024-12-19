@@ -62,7 +62,7 @@ public class ThirdParty extends DolibarrObject{
     public ThirdParty(Person person){
         this();
         this.setName(person.getUserAccount().isProfessionnalAccount() ? person.getUserAccount().getCompanyName() : person.getFullName());
-        this.setPhone(person.getPhone());
+        this.setPhone(person.getPhonePrefix() + person.getPhoneNumber());
         this.setEmail(person.getUserAccount().getUsername());
         this.setAddress(person.getAddress().getRow2() != null ? person.getAddress().getRow2()+", "+person.getAddress().getRow3()+", "+person.getAddress().getRow4()+", "+person.getAddress().getRow5() : null);
         this.setTown(person.getAddress().getTown() != null ? person.getAddress().getTown().getName() : null);

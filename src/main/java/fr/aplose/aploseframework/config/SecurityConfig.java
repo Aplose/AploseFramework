@@ -112,10 +112,12 @@ public class SecurityConfig {
                 auth.requestMatchers(new AntPathRequestMatcher("/api/config/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "POST")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/dolibarr/**", "PUT")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/vizulive", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/vizulive/**", "POST")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/vizulive/**", "GET")).permitAll();
                 auth.requestMatchers(new AntPathRequestMatcher("/api/vizulive/**", "DELETE")).permitAll();
+                auth.requestMatchers(new AntPathRequestMatcher("/api/rules/**", "POST")).permitAll();
                 auth.anyRequest().authenticated();
             })
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -39,6 +39,9 @@ public class RegisterDto {
     @NotNull(message = "Last-name cannot be null")
     private String lastName; // contact and user 
 
+    //Indicatif telephone
+    private String phonePrefix;
+    private String phoneNumber;
     private String phone; //contact and user
 
     @NotNull(message = "You must provide your civility")
@@ -125,6 +128,22 @@ public class RegisterDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhonePrefix() {
+        return phonePrefix;
+    }
+
+    public void setPhonePrefix(String phonePrefix) {
+        this.phonePrefix = phonePrefix;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPhone() {

@@ -41,8 +41,8 @@ public class User extends DolibarrObject {
     public User(Person person){
         this();
         this.setName(person.getFullName());
-        this.setPhone(person.getPhone());
-        this.setMobile(person.getPhone());
+        this.setPhone(person.getPhonePrefix() + person.getPhoneNumber());
+        this.setMobile(person.getPhonePrefix() + person.getPhoneNumber());
         this.setAddress(person.getAddress() != null ? person.getAddress().getRow2() + " " + person.getAddress().getRow3() + " " + person.getAddress().getRow4() + " " + person.getAddress().getRow5() : "");
         this.setCivility_code(person.getCivility().getCode());
         this.setCountry_code(person.getAddress().getCountry().getCode());

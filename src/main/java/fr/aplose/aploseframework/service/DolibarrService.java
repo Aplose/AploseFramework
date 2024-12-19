@@ -27,6 +27,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import fr.aplose.aploseframework.dto.ProposalLineDTO;
 import fr.aplose.aploseframework.exception.DolibarrException;
 import fr.aplose.aploseframework.exception.ProposalLineNotUpdatedException;
+import fr.aplose.aploseframework.exception.ProposalNotFoundException;
+import fr.aplose.aploseframework.exception.ProposalUpdateException;
 import fr.aplose.aploseframework.exception.ProposalValidationException;
 import fr.aplose.aploseframework.model.UserAccount;
 import fr.aplose.aploseframework.model.dictionnary.AbstractDictionnary;
@@ -167,27 +169,6 @@ public class DolibarrService {
 
         dolibarrApiUrl = configService.getStringConfig("dolibarr.api.url");
         dolibarrUserApiKey=configService.getStringConfig("dolibarr.api.userkey");
-/*        ThirdParty t= new ThirdParty();
-        t.setEntity(1);
-        t.setName("Test post from AploseFramework");
-        t.setIdprof1("123456789");
-        t.setClient(3);
-        t.setProspect(1);
-        t.setFournisseur(1);
-        t.setCode_client("-1");
-        t.setCode_fournisseur("-1");
-        t.setEmail("oandrade@free.fr");
-        System.out.println("ThirdParty created id : "+this.createDolibarrObject(t));
-        User u = new User();
-        u.setEmail("oandrade@aplose.fr");
-        u.setEntity(1);
-        u.setFirstname("Olivier");
-        u.setLastname("ANDRADE SANCHEZ");
-        u.setLogin("oandrade-"+UUID.randomUUID());
-        u.setMobile("0623678421");
-        u.setPassword("Oandrade01");
-        System.out.println("User created id : "+this.createDolibarrObject(u));*/
-
     }
                  
     
@@ -445,54 +426,6 @@ public class DolibarrService {
     }
 
 
-
-// /*
-//  * Ajoute une ligne à un devis (Proposal) ou crée un nouveau devis si nécessaire.
-//  */
-// public Integer addProposalLine(UserAccount userAccount, ProposalLine proposalLine){
-
-//     Integer proposalId;
-//     try{
-//         // Récupération de l'ID du devis en cours de l'utilisateur
-//         proposalId = userAccount.getDolibarrPendingProposalId();
-//     }
-//     catch(NullPointerException e){
-//         proposalId = null;
-//     }
-
-
-//     // Si l'utilisateur n'a pas encore de devis associé
-//     if(proposalId == null){
-//         // Création d'un nouveau devis (Proposal)
-//         Proposal proposal = new Proposal();
-//         // Association du tiers (ThirdParty) au devis
-//         proposal.setSocid(userAccount.getDolibarrThirdPartyId());
-//         // Assignation de la date de création au devis
-//         proposal.setDatep(Instant.now().toString());
-//         // Enregistrement du nouveau devis dans Dolibarr et récupération de son ID
-//         proposalId = this.createDolibarrObject(proposal);
-//         // Association de l'ID du devis à l'utilisateur
-//         userAccount.setDolibarrPendingProposalId(proposalId);
-//         // Sauvegarde de la mise à jour de l'utilisateur
-//         this._userAccountService.update(userAccount);
-//     }
-
-//     try {
-//         // Envoi de la requête pour ajouter une ligne au devis et retour de l'ID de la nouvelle ligne
-//         return this.restClient.post()
-//             .uri(dolibarrApiUrl + "/proposals/" + proposalId + "/line?DOLAPIKEY=" + dolibarrUserApiKey)
-//             .contentType(MediaType.APPLICATION_JSON)
-//             .body(proposalLine)
-//             .accept(MediaType.APPLICATION_JSON)
-//             .retrieve()
-//             .body(Integer.class);
-//     } catch (RestClientException e) {
-//         e.printStackTrace();
-//         // Retourne 0 en cas d'échec de la requête
-//         return 0;
-//     }
-// }
-
  /*
      * Créer un objet ProposalLine correctement
      */
@@ -520,6 +453,14 @@ public class DolibarrService {
             proposalId = userAccount.getDolibarrPendingProposalId();
         }
         catch(NullPointerException e){
+            proposalId = null;
+        }
+        //on vérifie si la propale existe toujorus sur dolibarr car elle peut avoir été supprimée par un autre utilisateur
+        try{
+            this.getProposalById(proposalId);
+        }catch(ProposalNotFoundException e){
+            userAccount.setDolibarrPendingProposalId(null);
+            this._userAccountService.update(userAccount);
             proposalId = null;
         }
 
@@ -587,8 +528,11 @@ public class DolibarrService {
     /**
      * Obtenir le devis en cours et récupérer des information des produits contenus dans le devis
      */
-    public Proposal getProposalById(Integer proposalId){
+    public Proposal getProposalById(Integer proposalId) throws ProposalNotFoundException{
         Proposal proposal = (Proposal)this.getById(Proposal.NAME, proposalId);
+        if(proposal == null){
+            throw new ProposalNotFoundException("Proposal not found");
+        }
         proposal.getLines().forEach((ProposalLine line) -> {
             Product product = (Product)this.getById(Product.NAME, line.getFk_product());
             Category[] category = this.getCategoriesForProduct(product.getId().toString());
@@ -615,6 +559,22 @@ public class DolibarrService {
         userAccount.setDolibarrPendingProposalId(null);
         this._userAccountService.update(userAccount);
         return proposal.getId();
+    }
+
+    /**
+     * Mets à jour le devis
+     */
+    public void updateProposal(Proposal proposal) throws ProposalUpdateException{
+        Proposal outputProposal= this.restClient.put()
+        .uri(dolibarrApiUrl+"/proposals/"+proposal.getId()+"?DOLAPIKEY="+dolibarrUserApiKey)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(proposal)
+        .retrieve()
+        .body(Proposal.class)
+        ;
+        if(outputProposal == null){
+            throw new ProposalUpdateException("Error during the Dolibarr request of proposal update");
+        }
     }
 
 
