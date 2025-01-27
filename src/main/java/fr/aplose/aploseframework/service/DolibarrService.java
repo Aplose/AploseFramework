@@ -552,14 +552,30 @@ public class DolibarrService {
         .body(Map.of("notrigger", 0))
         .retrieve()
         .body(Proposal.class)
-        ;
+        ;        
         if(proposal == null || proposal.getId() < 1){
             throw new ProposalValidationException("Error during the Dolibarr request of proposal validation");
         }
+        //on doit générer le pdf du devis validé
+        this.generateProposalPdf(proposal);
         userAccount.setDolibarrPendingProposalId(null);
         this._userAccountService.update(userAccount);
         this.sendPropalByMail(proposal.getId());
         return proposal.getId();
+    }
+
+    /**
+     * Générer le pdf du devis
+     */
+    public void generateProposalPdf(Proposal proposal){
+        //on doit générer le pdf du devis validé pour cela on utilise le endpoint buildoc
+        this.restClient.put()
+        .uri(dolibarrApiUrl+"/documents/"+proposal.getId()+"/buildoc?DOLAPIKEY="+dolibarrUserApiKey)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Map.of("notrigger", 0, "modulepart", "proposals", "id", proposal.getId(), "type", "pdf", "original_file", proposal.getRef()+"/"+proposal.getRef()+".pdf"))
+        .retrieve()
+        .body(String.class)
+        ;
     }
 
     /**
