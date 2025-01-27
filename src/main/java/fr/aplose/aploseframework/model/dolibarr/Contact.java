@@ -36,9 +36,9 @@ public class Contact extends DolibarrObject {
         this.setFirstname(person.getFirstName());
         this.setLastname(person.getLastName());
         this.setEmail(person.getUserAccount().getUsername());
-        this.setPhone_pro(person.getPhone());
+        this.setPhone_pro(person.getPhonePrefix() + person.getPhoneNumber());
         //TODO voir pour row3, row4 ...
-        this.setAddress(person.getAddress() != null ? person.getAddress().getRow2() : "");
+        this.setAddress(person.getAddress() != null ? person.getAddress().getRow2() + "\n" + person.getAddress().getRow3() + "\n" + person.getAddress().getRow4() + "\n" + person.getAddress().getRow5() : "");
         this.setZip(person.getAddress().getTown() != null ? person.getAddress().getTown().getZipCode() : "");
         this.setTown(person.getAddress().getTown() != null ? person.getAddress().getTown().getName() : "");
         this.setCountry_id(person.getAddress().getCountry().getId());

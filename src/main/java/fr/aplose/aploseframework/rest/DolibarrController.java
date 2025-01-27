@@ -1,6 +1,8 @@
 package fr.aplose.aploseframework.rest;
 import fr.aplose.aploseframework.dto.ProposalLineDTO;
 import fr.aplose.aploseframework.exception.DolibarrException;
+import fr.aplose.aploseframework.exception.ProposalNotFoundException;
+import fr.aplose.aploseframework.exception.ProposalUpdateException;
 import fr.aplose.aploseframework.model.UserAccount;
 import fr.aplose.aploseframework.model.dolibarr.Category;
 import fr.aplose.aploseframework.model.dolibarr.Document;
@@ -52,6 +54,13 @@ public class DolibarrController {
     public DocumentFile getFile(@RequestParam String modulePart, @RequestBody Document document) {
         return dolibarrService.getFile(document.getLevel1name(), document.getRelativename(), modulePart);
     }
+    /**
+     * Get file of a module by route
+     */
+    @GetMapping(value = "/document/download/{modulePart}/{level1name}/{relativename}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DocumentFile getFile(@PathVariable String modulePart, @PathVariable String level1name, @PathVariable String relativename) {
+        return dolibarrService.getFile(level1name, relativename, modulePart);
+    }
 
     @GetMapping("/category")
     public Category[] getCategoryTreeForType(@RequestParam("type") String type,
@@ -71,6 +80,11 @@ public class DolibarrController {
     public Category[] getCategoryForProduct(@PathVariable("id") String id) {
         Category[] categories = dolibarrService.getCategoriesForProduct(id);
         return categories;
+    }
+
+    @PutMapping("/proposal")
+    public void updateProposal(@RequestBody Proposal proposal) throws ProposalUpdateException{
+        dolibarrService.updateProposal(proposal);
     }
 
     /*
@@ -94,11 +108,11 @@ public class DolibarrController {
      * Récupérer le devis (Proposal) en cours
      */
     @GetMapping("/proposal")
-    public ResponseEntity<Proposal> getPendingProposal(@AuthenticationPrincipal UserAccount userAccount){
+    public ResponseEntity<Proposal> getPendingProposal(@AuthenticationPrincipal UserAccount userAccount) throws ProposalNotFoundException{
         if(userAccount.getDolibarrPendingProposalId() == null){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok((Proposal) dolibarrService.getById(Proposal.NAME, userAccount.getDolibarrPendingProposalId()));
+        return ResponseEntity.ok(dolibarrService.getProposalById(userAccount.getDolibarrPendingProposalId()));
     }
     /*
      * Mettre à jour une ligne du devis en cours
