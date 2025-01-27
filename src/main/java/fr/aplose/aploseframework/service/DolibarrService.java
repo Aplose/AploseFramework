@@ -614,8 +614,20 @@ public class DolibarrService {
         }
         userAccount.setDolibarrPendingProposalId(null);
         this._userAccountService.update(userAccount);
+        this.sendPropalByMail(proposal.getId());
         return proposal.getId();
     }
 
 
+    /*
+     * Envoyer un devis par mail
+     */
+    public void sendPropalByMail(Integer proposalId){
+        this.restClient.get()
+        .uri(dolibarrApiUrl+"/cadkwote/propal?propal_id="+proposalId+"&DOLAPIKEY="+dolibarrUserApiKey)
+        .retrieve()
+        .body(String.class)
+        ;
+        
+    }
 }
