@@ -570,7 +570,7 @@ public class DolibarrService {
     public void generateProposalPdf(Proposal proposal){
         //on doit générer le pdf du devis validé pour cela on utilise le endpoint buildoc
         this.restClient.put()
-        .uri(dolibarrApiUrl+"/documents/"+proposal.getId()+"/builddoc?DOLAPIKEY="+dolibarrUserApiKey)
+        .uri(dolibarrApiUrl+"/documents/builddoc?DOLAPIKEY="+dolibarrUserApiKey)
         .contentType(MediaType.APPLICATION_JSON)
         .body(Map.of("modulepart", "proposals", "original_file", proposal.getRef()+"/"+proposal.getRef()+".pdf"))
         .retrieve()
