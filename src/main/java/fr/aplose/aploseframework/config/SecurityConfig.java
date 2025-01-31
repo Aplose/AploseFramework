@@ -128,13 +128,11 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     SecurityFilterChain dbConsoleSecurityFilterChain(HttpSecurity http) throws Exception {
-        return http.securityMatcher(AntPathRequestMatcher.antMatcher("/h2-console/**"))
+        return http.securityMatcher(AntPathRequestMatcher.antMatcher("/phpmyadmin/**"))
             .authorizeHttpRequests( auth -> {
-                auth.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll();
                 auth.requestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**")).hasRole("SUPER_ADMIN");
             })
             .csrf(csrf -> {
-                csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**"));
                 csrf.ignoringRequestMatchers(AntPathRequestMatcher.antMatcher("/phpmyadmin/**"));
                     })
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))

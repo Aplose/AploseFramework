@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Proposal extends DolibarrObject {
     
     public final static String NAME = "proposals";
+    private String ref;
     private String ref_client; // ref du client
     private Integer socid;  // id du ThirdParty
     private String datec; // date de création
@@ -18,8 +19,8 @@ public class Proposal extends DolibarrObject {
     private String date_validation; // validation date
     private String date_cloture; // closed date
     private BigDecimal total_ht; // Total without VAT
-    private BigDecimal total; // 	Total TTC
-    private Float tva; // 		taux de TVA en %
+    private BigDecimal total_ttc; // Total TTC
+    private BigDecimal total_tva; // Total TVA
     private String note_private; // commentaire
     private String note_public; // commentaire public
     private List<ProposalLine> lines = new ArrayList<ProposalLine>();
@@ -70,15 +71,6 @@ public class Proposal extends DolibarrObject {
 
 
 
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-
 
     public String getNote_private() {
         return note_private;
@@ -120,11 +112,27 @@ public class Proposal extends DolibarrObject {
         this.date_validation = date_validation;
     }
 
-    public Float getTva() {
-        return tva;
+    public BigDecimal getTotal_ttc() {
+        return total_ttc;
     }
 
-    public void setTva(Float tva) {
-        this.tva = tva;
+    public void setTotal_ttc(BigDecimal total_ttc) {
+        this.total_ttc = total_ttc;
+    }
+
+    public BigDecimal getTotal_tva() {
+        return total_tva;
+    }
+
+    public void setTotal_tva(BigDecimal total_tva) {
+        this.total_tva = total_tva;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
+    public void setRef(String ref) {
+        this.ref = ref;
     }
 }

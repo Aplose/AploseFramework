@@ -135,14 +135,18 @@ public class DolibarrController {
     public Proposal[] getProposals(@AuthenticationPrincipal UserAccount userAccount){
         Map<String, String> params = new HashMap<>();
         params.put("sqlfilters", "(t.fk_soc:like:'"+userAccount.getDolibarrThirdPartyId()+"')and(t.fk_statut:>:'0')");
-        Proposal[] proposals =  (Proposal[])this.dolibarrService.getAll(Proposal.NAME, params);
-        System.err.println("\n\n\n");
-        for (int i = 0; i < proposals.length; i++) {
-            
-            System.err.println("tva: "+proposals[i].getTva());
-        System.err.println("\n");
-    }
-        System.err.println("\n\n\n");
+        
+        // Récupérer le résultat comme DolibarrObject[]
+        DolibarrObject[] objects = this.dolibarrService.getAll(Proposal.NAME, params);
+        
+        // Créer un nouveau tableau de Proposal de la même taille
+        Proposal[] proposals = new Proposal[objects.length];
+        
+        // Convertir chaque élément
+        for (int i = 0; i < objects.length; i++) {
+            proposals[i] = (Proposal) objects[i];
+        }
+        
         return proposals;
     }
     /*
